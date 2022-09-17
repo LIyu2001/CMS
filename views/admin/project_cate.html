@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <style>
+        #addBox {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <span class="layui-breadcrumb">
+                <a href="">项目管理</a>
+                <a><cite>分类管理</cite></a>
+            </span>
+        </div>
+        <div class="layui-card-body">
+            <form class="layui-form" action="">
+                <div class="layui-inline">
+                    <button type="button" class="layui-btn" onclick=cateAdd()>
+                        <i class="layui-icon">&#xe654;</i>
+                    </button>
+                </div>
+            </form>
+            <!-- 数据表格 -->
+            <table class="layui-table tableRender"></table>
+
+
+        </div>
+    </div>
+
+
+    <div id="addBox">
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">分类名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="pc_name" required lay-verify="required " placeholder="请输入分类名称"
+                        autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="cateform">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+
+    <!-- 
+  <tr>
+    <th>ID</th>
+    <th>分类名称</th>
+    <th>是否删除</th>
+  </tr> -->
+
+
+</body>
+
+</html>
+
+<script type="type/html" id="titleTpl1">
+    <button onclick="isDelete('{{d.pc_id}}', '{{d.is_delete?0:1}}')" class="layui-btn  layui-btn-sm {{d.is_delete?" ":"layui-btn-warm "}}">{{d.is_delete?"仍保留":"已删除"}}</button>
+</script>
+
+
+<script src="/layui/layui.js"></script>
+
+<script>
+    var form
+    var $
+    var layer
+    var table
+    //更改情况
+
+
+    function isDelete(id, is_delete) {
+        console.log(id, is_delete);
+        $.ajax({
+            type: "GET",
+            url: `/admin/procat/update?id=${id}&is_delete=${is_delete}`,
+            success: (res) => {
+                var {
+                    code,
+                    msg
+                } = res
+                if (code == 1) {
+                    //表格重载
+                    table.reload('cort', {});
+                } else {
+
+                }
+                layer.msg(msg)
+            }
+        })
+    }
+
+
+
+    // 添加分类
+    function cateAdd() {
+        var index1 = layer.open({
+            type: 1,
+            title: '分类添加',
+            content: $('#addBox')
+        });
+
+        form.on('submit(cateform)', function (data) {
+            var {
+                pc_name
+            } = data.field
+
+            $.ajax({
+                type: "POST",
+                url: "/admin/procat/insert",
+                data: data.field,
+                dataType: 'json',
+                success: (res) => {
+                    var {
+                        code,
+                        msg
+                    } = res
+                    if (code == 1) {
+                        //返回成功数据
+                        //1.关闭输入框
+                        layer.close(index1)
+                        //2.表格重载
+                        table.reload('cort', {});
+                    } else {
+                        //返回失败数据
+
+                    }
+                    layer.msg(msg)
+                }
+            })
+
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+
+    }
+
+    //表格数据渲染
+    layui.use(['element', 'form', 'jquery', 'table', 'layer'], function () {
+        var { element } = layui
+        table = layui.table
+        form = layui.form
+        $ = layui.$
+        layer = layui.layer
+        //表格数据渲染
+        table.render({
+            elem: '.tableRender',
+            url: '/admin/procat/query', //数据接口
+            page: true, //开启分页
+            cols: [
+                [ //表头
+                    // {
+                    //     field: "",
+                    //     title: `<div><input type="checkbox" name="" lay-skin="primary"></div>`,
+                    //     width: 80,
+                    //     fixed: 'left',
+                    //     templet: ` <div><input type="checkbox" name="" lay-skin="primary"></div>`
+                    // },
+                    {
+                        field: 'pc_id',
+                        title: 'ID',
+                        sort: true,
+                        fixed: 'left'
+                    }, {
+                        field: 'pc_name',
+                        title: '分类名称'
+                    }, {
+                        field: 'is_delete',
+                        title: '当前情况',
+                        templet: "#titleTpl1"
+                    }
+                ]
+            ],
+            limit: 10,
+            limits: [10, 15, 20, 25],
+            id: 'cort'
+        });
+    })
+</script>

@@ -1,0 +1,88 @@
+<%- include('common/header.html') %>
+  <!-- 引入所有专题样式 -->
+  <link rel="stylesheet" href="/css/index/subject.css">
+  <!-- 引入每周精华类样式 -->
+  <link rel="stylesheet" href="/css/index/subject_sub/subject_nav.css">
+  <!-- 引入详情页面样式 -->
+  <link rel="stylesheet" href="/css/index/subject_sub/subject_item.css">
+
+  <!-- banner开始 -->
+  <section class="banner">
+    <img src="/upload/subject_banner2.jpg" alt="">
+  </section>
+  <!-- banner结束 -->
+
+  <!-- 所有专题导航 -->
+  <nav>
+    <ul class="sub_navlist">
+      <% subCate.forEach(item=>{ %>
+        <li><a href="/subject?id=<%= item.nc_id %>"><%= item.nc_name %></a></li>
+      <% }) %>
+    </ul>
+  </nav>
+
+  <!-- 新闻列表 -->
+  <main class="news_details">
+    <main class="news_part">
+      <div class="center">
+        <div class="left">
+          <div class="newsitem_details">
+            <% subDetails.forEach(item=>{ %>
+              <div class="details_title">
+                <h1><%= item.news_title %></h1>
+                <p class="data">
+                  <span><%= item.news_ctime %></span>
+                  <span class="glyphicon glyphicon-eye-open"><%= item.news_visit %></span>
+                </p>
+              </div>
+              <div class="details_body">
+                <p class="details"><%= item.news_content %></p>
+              </div>
+            <% }) %>
+            
+          </div>
+          <div class="details_footer">
+            <ul>
+              <% if(prev=='没有了'){ %>
+                <li><a href="javascript:;" style="text-decoration: none;">上一篇 : <%=prev%></a></li>
+              <% }else{ %>
+                <li><a href="/subjectDetails?id=<%=prev.news_id%>">上一篇 : <%=prev.news_title%></a></li>
+              <% } %>
+              <% if(next=='没有了'){ %>
+                <li><a href="javascript:;" style="text-decoration: none;">下一篇 : <%=next%></a></li>
+              <% }else{ %>
+                <li><a href="/subjectDetails?id=<%=next.news_id%>">下一篇 : <%=next.news_title%></a></li>
+              <% } %>
+            </ul>
+          </div>
+        </div>
+        <div class="right">
+          <div class="sub_navlist2">
+            <ul>
+              <ul>
+                <% subCate.forEach(item=>{ %>
+                  <li><a href="/subject?id=<%= item.nc_id %>"><%= item.nc_name %></a></li>
+                <% }) %>
+              </ul>
+            </ul>
+          </div>
+          <div class="recommend">
+            <h3>为你推荐</h3>
+            <ul>
+              <% news.forEach(item=>{ %>
+                <li><a href="/subjectDetails?id=<%= item.news_id %>"><%= item.news_title %></a></li>
+              <% }) %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </main>
+  </main>
+
+  <!-- 底部 -->
+  <%- include('common/footer.html') %>
+</body>
+
+</html>
+
+<script src="/js/index/index.js"></script>

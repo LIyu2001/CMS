@@ -1,0 +1,43 @@
+<%- include("common/header.html")%>
+    <link rel="stylesheet" href="/css/index/teams/item.css">
+    <!-- 头部结束 -->
+    <!-- banner开始 -->
+    <section class="banner">
+        <img src="/img/subject_banner.jpg" alt="">
+    </section>
+    <!-- banner结束 -->
+    <!-- 首席团队导航 -->
+    <nav>
+        <ul class="sub_navlist">
+            <% tenam.forEach(item=>{%>
+                <li><a href="/teamDet?id=<%=item.id%>">
+                        <%=item.team_name%>
+                    </a></li>
+                <%})%>
+        </ul>
+    </nav>
+
+    <!-- 团队信息开始 -->
+    <main class="show">
+        <div class="container">
+            <div>
+                <img src="<%=team.team_thumb%>" alt="">
+            </div>
+            <div class="itembody">
+                <p class="title">
+                    <%=team.team_name%>
+                </p>
+
+                <p class="section">
+                    <%=team.team_content%>
+                </p>
+                <!-- <p class="section1">数据演示数据演示数据演示数据演示数据演示数据演示数据演示数据演示数据演示</p>
+                <div class="line"></div>
+                <p class="section2">演示数据演示数据演示数据演示数据演示数据演示数据演示数据演示数据演示数据演示数据演示数据演示
+                    数据演示数据演示数据演示数据演示数据演示数据演示数据演示数据演示数据演示数据演示数据演示数据数据演示数据演示
+                    演示数据演示数据演示数据演示数据演示数据演示数据演示数据演示数据演示数据演示数据演示数据演示数据演示数据演示</p> -->
+            </div>
+        </div>
+    </main>
+
+    <%- include("common/footer.html")%>

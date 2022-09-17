@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/layui/css/layui.css">
+  <style>
+    .layui-table-cell {
+      height: 60px;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="layui-card">
+    <div class="layui-card-header">
+      <span class="layui-breadcrumb">
+        <a href="">项目管理</a>
+        <a><cite>查看项目</cite></a>
+      </span>
+    </div>
+    <div class="layui-card-body">
+      <form class="layui-form" action="">
+        <div class="layui-inline">
+          <div class="layui-input-inline" style="width: 200px;">
+            <input type="text" placeholder="请输入搜索内容" autocomplete="off" class="layui-input" name="project_title">
+          </div>
+          <button type="button" class="layui-btn" lay-submit lay-filter="search"><i class="layui-icon layui-icon-search"
+              style="margin-right:5px;"></i>搜索</button>
+        </div>
+      </form>
+
+      <table class="layui-table projectTable" lay-filter="test"></table>
+
+
+    </div>
+  </div>
+</body>
+
+<i></i>
+
+</html>
+
+
+<!-- 模板 -->
+<script id="image" type="text/html">
+  <img src="{{d.project_thumb}}" >
+</script>
+
+<!-- 这个是操作模板，因为用了table自带的模板，所以没用上 -->
+<script type="type/html" id="titleTpl1">
+  <div>
+    <a href="javascript:;" onclick="updateAll('{{d.project_id}}')"  >
+      <i class="layui-icon  layui-icon-edit"  style="font-size: 25px;"></i>
+    </a>
+    <a href="javascript:;" onclick="deleteProject('{{d.project_id}}','{{d.project_thumb}}')"  >
+      <i class="layui-icon layui-icon-delete" style="font-size: 25px;"></i>
+    </a>
+  </div>
+</script>
+<!-- 这是修改删除状态的模板 -->
+<script type="type/html" id="titleTpl2">
+  <div>
+    <button onclick="is_delete('{{d.project_id}}','{{d.is_delete?0:1}}')"	class="layui-btn layui-btn-sm {{d.is_delete?'':'layui-btn-danger'}}" >{{d.is_delete?'仍保留':'已删除'}}</button>
+  </div>
+</script>
+
+<!-- 工具栏模板 -->
+<script type="text/html" id="titleTpl3">
+  <div class="layui-btn-container">
+    <button class="layui-btn layui-btn-sm" lay-event="read">查看</button>
+    <button class="layui-btn layui-btn-sm" lay-event="update">编辑</button>
+  </div>
+</script>
+
+
+
+<script src="/layui/layui.js"></script>
+<script>
+  var form
+  var table
+  var $
+  var layer
+
+
+  //是否删除功能
+  function is_delete(id, flag) {
+    //发送ajax请求,get
+    $.ajax({
+      type: "GET",
+      url: `/admin/project/is_delete?project_id=${id}&is_delete=${flag}`,
+      dataType: "json",
+      success: (res) => {
+        var { code, msg } = res
+        if (code == 1) {
+          //修改成功，刷新页面
+          table.reload('projectTable', {});
+        }
+        layer.msg(msg)
+      }
+    })
+  }
+
+
+
+  layui.use(['element', 'table', 'form', 'jquery', 'layer'], function () {
+    var element = layui.element
+    table = layui.table
+    form = layui.form
+    $ = layui.$
+    layer = layui.layer
+    table.render({
+      elem: '.projectTable',
+      url: '/admin/project/query', //数据接口
+
+      cols: [[ //表头
+        // { field: "", title: `<div><input type="checkbox" name="" lay-skin="primary"></div>`, width: 80, fixed: 'left', templet: ` <div><input type="checkbox" name="" lay-skin="primary"></div>` },
+        { field: 'project_id', title: 'ID', width: 80, sort: true, fixed: 'left' },
+        { field: 'project_title', title: '项目名称' },
+        { field: 'project_thumb', title: '项目缩略图', templet: "#image" },
+        { field: 'pc_name', title: '项目所属分类', },
+        { field: 'ctime', title: '创建时间', },
+        { field: 'is_delete', title: '是否删除', templet: "#titleTpl2" },
+        { field: '', title: '操作', templet: "#titleTpl3" }
+      ]],
+      page: true,//开启分页
+      id: "projectTable",
+      limit: 5,
+      limits: [5, 10, 15]
+
+    });
+
+    //表单行事件
+    table.on('tool(test)', function (obj) {
+      // 数据都是obj.data
+      // console.log(obj.data);
+      switch (obj.event) {
+        case 'read':
+          location.href = `/admin/project/list?id=${obj.data.project_id}`
+          break;
+        case 'update':
+          location.href = `/admin/project/update?id=${obj.data.project_id}`
+          break;
+      };
+    });
+    //搜索功能
+    form.on('submit(search)', function (data) {
+      console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+      table.reload('projectTable', {
+        where: { //设定异步数据接口的额外参数，任意设
+          project_title: data.field.project_title
+
+        },
+        page: {
+          curr: 1 //重新从第 1 页开始
+        }
+      });
+
+      return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+    });
+
+
+  })
+</script>

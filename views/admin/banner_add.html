@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/layui/css/layui.css">
+
+</head>
+
+<body>
+  <div class="layui-card">
+    <div class="layui-card-header">
+      <span class="layui-breadcrumb">
+        <a href="">轮播图管理</a>
+        <a><cite>添加轮播图</cite></cite></a>
+      </span>
+    </div>
+    <div class="layui-card-body">
+      <form class="layui-form" action="" style="width: 800px;height: 400px;">
+        <!-- 图片名称： -->
+        <div class="layui-form-item">
+          <label class="layui-form-label">图片名称:</label>
+          <div class="layui-input-block">
+            <input type="text" name="banner_name" required lay-verify="required" placeholder="请输入图片名称"
+              autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <!-- 排序位置 -->
+        <div class="layui-form-item">
+          <label class="layui-form-label">图片排序:</label>
+          <div class="layui-input-block">
+            <!-- <input type="number" name="banner_sort" required lay-verify="required | number" placeholder=" 请输入排序"
+              autocomplete="off" class="layui-input"> -->
+            <input type="number" name="banner_sort" required lay-verify="required | number" placeholder="请输入导航排序"
+              autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <!-- 上传图片按钮 -->
+        <div class="layui-form-item">
+          <label class="layui-form-label">上传图片:</label>
+          <div class="layui-input-block">
+            <button type="button" class="layui-btn" id="thumb">
+              <i class="layui-icon">&#xe67c;</i>上传图片
+            </button>
+          </div>
+        </div>
+        <!-- 预览图区域 -->
+        <div class="layui-form-item">
+          <div class="layui-input-block">
+            <blockquote class="layui-elem-quote layui-quote-nm">预览图:
+              <div>
+                <img src="" alt="" class="imgs" style="width: 300px;">
+                <!-- 隐藏域，将图片路径传过去 -->
+                <input type="hidden" class="gthumb" name="banner_img">
+              </div>
+            </blockquote>
+          </div>
+        </div>
+        <!-- 提交按钮 -->
+        <div class="layui-form-item">
+          <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="bannerform">提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+          </div>
+        </div>
+
+    </div>
+    </form>
+  </div>
+  </div>
+</body>
+
+</html>
+
+
+
+
+<script src="/layui/layui.js"></script>
+<script>
+  window.onload = function () {
+    var imgs = document.querySelector(".imgs")
+    var gthumb = document.querySelector(".gthumb")
+    layui.use(['element', 'upload', 'layer', 'form', 'jquery'], function () {
+      var { element, upload, layer, form, $ } = layui
+
+      //图片上传
+      upload.render({
+        elem: "#thumb",
+        url: "/admin/banner/upload",
+        accept: "images",
+        acceptMime: "image/*",
+        size: 3000,
+        done: (res) => {
+          if (res.code == 1) {
+            //将路径传给预览图区域
+            imgs.src = res.url
+            //将路径给隐藏域中的表单，待会方便实现数据的提交
+            gthumb.value = res.url
+
+          } else {
+            layer.msg("图片上传失败:" + res.msg)
+          }
+        },
+      })
+
+
+      form.on('submit(bannerform)', function (data) {
+        //ajax请求
+        $.ajax({
+          type: "POST",
+          url: "/admin/banner/insert",
+          data: data.field,
+          dataType: "json",
+          success: (res) => {
+            var { code, msg } = res
+            if (code == 1) {
+              //添加成功
+              imgs.src = ""
+            } else {
+              //添加失败
+
+            }
+            layer.msg(msg)
+          }
+        })
+
+        // console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+        return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+      });
+    })
+  }
+
+</script>

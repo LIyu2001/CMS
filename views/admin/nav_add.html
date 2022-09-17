@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/layui/css/layui.css">
+
+</head>
+
+<body>
+  <div class="layui-card">
+    <div class="layui-card-header">
+      <span class="layui-breadcrumb">
+        <a href="">导航管理</a>
+        <a><cite>添加导航</cite></a>
+      </span>
+    </div>
+    <div class="layui-card-body">
+      <form class="layui-form" action="" style="width: 800px;height: 400px;">
+        <!-- 导航名称： -->
+        <div class="layui-form-item">
+          <label class="layui-form-label">导航名称：</label>
+          <div class="layui-input-block">
+            <input type="text" name="nav_name" required lay-verify="required" placeholder="请输入导航名称" autocomplete="off"
+              class="layui-input">
+          </div>
+        </div>
+        <!-- 导航名称： -->
+        <div class="layui-form-item">
+          <label class="layui-form-label">导航别名：</label>
+          <div class="layui-input-block">
+            <input type="text" name="nav_alias" required lay-verify="required" placeholder="请输入导航别名" autocomplete="off"
+              class="layui-input">
+          </div>
+        </div>
+        <!-- 排序位置 -->
+        <div class="layui-form-item">
+          <label class="layui-form-label">导航位置：</label>
+          <div class="layui-input-block">
+
+            <input type="number" name="nav_sort" required lay-verify="required | number" placeholder="请输入导航排序"
+              autocomplete="off" class="layui-input">
+
+          </div>
+        </div>
+
+
+        <div class="layui-form-item">
+          <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="navForm">提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>
+
+<script src="/layui/layui.js"></script>
+<script src="/js/navadd.js"></script>
+<script>
+  layui.use(['element', 'laypage'], function () {
+    var element = layui.element
+    var laypage = layui.laypage
+    laypage.render({
+      elem: 'test1',
+      count: 50
+    })
+  })
+</script>

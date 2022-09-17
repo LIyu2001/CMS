@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <style>
+        .layui-table-cell {
+            height: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layui-card">
+        <div class="layui-card-header">
+            <span class="layui-breadcrumb">
+                <a href="">专题管理</a>
+                <a><cite>查看专题</cite></a>
+            </span>
+        </div>
+        <div class="layui-card-body">
+
+
+            <table class="layui-table subjectTable" lay-even style="margin: 20px auto;"></table>
+            <div id="test1"></div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>
+
+<!-- 修改专题点击量模板 -->
+<script type="text/html" id="titleTpl">
+    <div>
+        <input onchange="updateVIew('{{d.news_id}}',this)" type="number" name=""  class="layui-input"  value="{{d.news_visit}}" style="width:100%; text-align:center; padding-left:0;height:27px ;border-color:#989898">
+    </div>
+</script>
+
+<!-- 软删除模板 -->
+<script type="text/html" id="titleTp2">
+    <div>
+        <button onclick = "deleteNew('{{d.news_id}}','{{d.news_is_delete?0:1}}')"class="layui-btn {{d.news_is_delete?'layui-btn-danger':''}}">{{d.news_is_delete?'已删除':'未删除'}}</button>
+    </div>
+</script>
+
+<script src="/layui/layui.js"></script>
+<script>
+    var $
+    var table
+    var layer
+    var form
+    var upload
+    //软删除
+    function deleteNew(id, flag) {
+        $.ajax({
+            type: "GET",
+            url: `/admin/subject/isdelete?news_id=${id}&news_is_delete=${flag}`,
+            success: (res) => {
+                var { code, msg } = res
+                if (code == 1) {
+                    table.reload('subjectTab', {});
+                }
+                layer.msg(msg)
+            }
+        })
+    }
+
+
+    //排序浏览量
+    function updateVIew(id, obj) {
+        // console.log(id, obj.value);
+        //ajax发送请求get
+        $.ajax({
+            type: "GET",
+            url: `/admin/subject/update?news_id=${id}&news_visit=${obj.value}`,
+            success: (res) => {
+                var { code, msg } = res
+                if (code == 1) {
+                    table.reload('subjectTab', {});
+                }
+                layer.msg(msg)
+            }
+        })
+    }
+
+    //修改(图片名，图片)
+    function updateAll(id) {
+        // 弹出层
+        var index2 = layer.open({
+            type: 1,
+            title: '修改专题信息',
+            area: ['700px', '600px'],
+            content: $(".updateinfo")
+        });
+
+
+        //ajax发送get请求，将先进行获取,数据渲染
+        $.ajax({
+            type: "GET",
+            url: `/admin/subject/query?subject_id=${id}`,
+            dataType: "json",
+            success: (res) => {
+                var {
+                    subject_id,
+                    subject_name,
+                    subject_img
+                } = res.data
+                /**
+                 * js：DOM对象，
+                 * jquery:jquery对象
+                 */
+                document.querySelector(".subjectid").value = subject_id
+                document.querySelector(".subjectname").value = subject_name
+                //原生Js获取设置对象的src
+                // document.querySelector(".imgs").src = subject_img
+                //jquery对象设置src
+                $(".imgs").attr("src", subject_img)
+                //旧图地址的渲染
+                $(".deleteimg").val(subject_img)
+            }
+        })
+        /**
+         * 修改数据
+         * 1. 不修改数据：name ，sort ，img ,id
+         * 2. 修改图片: name ，sortt ，img(新图) ，id ,oldimg(旧图地址) 
+         */
+        //上传图片,upload模块
+
+        //表单提交
+        form.on('submit(subjectUp)', function (data) {
+            //ajax提交数据
+            $.ajax({
+                type: "POST",
+                url: "/admin/subject/updateAll",
+                data: data.field,
+                dataType: "json",
+                success(res) {
+                    var {
+                        code,
+                        msg
+                    } = res
+                    if (code == 1) {
+                        //表格重载，关闭弹框
+                        table.reload('subjectTab', {});
+                    }
+                    layer.close(index2)
+                    layer.msg(msg)
+                }
+            })
+
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+
+    }
+
+
+    layui.use(['element', 'table', 'jquery', 'layer', 'form', 'upload'], function () {
+        var { element } = layui
+        table = layui.table
+        $ = layui.$
+        layer = layui.layer
+        form = layui.form
+        upload = layui.upload
+        // 表格数据渲染
+        table.render({
+            elem: '.subjectTable',
+            url: '/admin/subject/query', //数据接口
+            // page: true, //开启
+            cols: [
+                [ //表头
+                    // {
+                    //     field: "",
+                    //     title: `<div><input type="checkbox" name="" lay-skin="primary"></div>`,
+                    //     fixed: 'left',
+                    //     templet: ` <div><input type="checkbox" name="" lay-skin="primary"></div>`
+                    // }, 
+                    {
+                        field: 'news_id',
+                        title: 'ID',
+                        sort: true,
+                    }, {
+                        field: 'news_title',
+                        title: '专题标题'
+                    }, {
+                        field: 'news_thumb', title: '专题图片', templet: `<div><img src="{{d.news_thumb}}" style="width:100px"></div>`
+                    }, {
+                        field: 'news_ctime',
+                        title: '创建时间',
+                    }, {
+                        field: 'nc_name',
+                        title: '所属分类',
+                    },
+                    {
+                        field: 'news_visit',
+                        title: '专题点击量',
+                        templet: '#titleTpl'
+                    },
+                    {
+                        field: 'news_is_delete',
+                        title: '状态',
+                        templet: '#titleTp2'
+                    }
+                ]
+            ],
+            id: 'subjectTab',
+            page: true,
+            limit: 10,
+            limits: [10, 15, 20]
+        });
+
+        //图片上传模块
+        var uploadInst = upload.render({
+            elem: '#upload', //绑定元素
+            url: '/admin/subject/upload', //上传接口
+            done: function (res) {
+                //上传完毕回调
+                if (res.code == 1) {
+                    //将路径传给预览图区域
+                    document.querySelector(".imgs").src = res.url
+                    //将路径给隐藏域中的表单，待会方便实现数据的提交
+                    $(".gthumb").val(res.url)
+                } else {
+                    layer.msg("图片上传失败")
+                }
+            }
+        });
+    })
+</script>

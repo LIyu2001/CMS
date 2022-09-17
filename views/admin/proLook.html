@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/layui/css/layui.css">
+  <style>
+    .layui-card-body {
+      height: 753px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layui-card">
+    <div class="layui-card-header">
+      <span class="layui-breadcrumb">
+        <a href="">项目管理</a>
+        <a><cite>查看单个项目</cite></cite></a>
+      </span>
+    </div>
+    <div class="layui-card-body">
+      <form class="layui-form" action="" style="width: 800px;height: 400px;">
+        <!-- 图片名称： -->
+        <div class="layui-form-item">
+          <label class="layui-form-label">所属分类：</label>
+          <div class="layui-input-block">
+            <input type="text" name="project_cart" value="<%= data.pc_name%>" class="layui-input" readonly>
+          </div>
+        </div>
+        <!-- 图片名称： -->
+        <div class="layui-form-item">
+          <label class="layui-form-label">项目名称：</label>
+          <div class="layui-input-block">
+            <input type="text" name="project_title" disabled value="<%=data.project_title%>" autocomplete="off"
+              class="layui-input">
+
+          </div>
+        </div>
+        <!-- 上传图片 -->
+        <div class="layui-form-item">
+          <label class="layui-form-label">项目图片：</label>
+          <div class="layui-input-block">
+            <img width="200px" src="<%= data.project_thumb%>" alt="">
+          </div>
+        </div>
+
+        <!-- 项目描述 -->
+        <div class="layui-form-item">
+          <label class="layui-form-label">项目描述：</label>
+          <div class="layui-input-block">
+            <textarea style="display: none;" id="demo" name="project_content">
+            <%= data.project_content %></textarea>
+
+          </div>
+
+        </div>
+        <!-- 项目组图 -->
+        <div class="layui-form-item">
+          <label class="layui-form-label">项目组图：</label>
+          <div class="layui-input-block">
+            <% data.project_banner.split(",").forEach((item)=>{ %>
+              <img width="200px" src="<%=item%>" alt="">
+              <%})%>
+          </div>
+        </div>
+
+        <div class="layui-form-item">
+          <label class="layui-form-label">状态:</label>
+          <div class="layui-input-block">
+            <% if(data.is_delete==1){%>
+              <input type="checkbox" name="zzz" lay-skin="switch" lay-text="未删除|已删除" checked disabled>
+              <%}else{%>
+                <input type="checkbox" name="zzz" lay-skin="switch" lay-text="未删除|已删除" disabled>
+                <%}%>
+
+          </div>
+        </div>
+
+
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>
+
+<script src="/layui/layui.js"></script>
+<script>
+  layui.use(['element', 'upload', 'jquery', 'layer', 'form', 'layedit'], function () {
+    var { element, upload, $, layer, form, layedit } = layui
+
+
+
+    //富文本编辑器
+    var layeditIns = layedit.build('demo', {
+
+    }); //建立编辑器
+
+
+
+
+
+
+  })
+</script>

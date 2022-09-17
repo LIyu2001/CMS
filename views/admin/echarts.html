@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>数据可视化</title>
+  <link rel="stylesheet" href="/layui/css/layui.css">
+  <style>
+    .list {
+      padding: 10px, 15px;
+      background-color: #009688;
+
+    }
+
+    [class*=layui-col-] {
+      padding: 5px;
+    }
+
+    .list h3 {
+      margin-left: 15px;
+      color: #fff;
+    }
+
+    .list p {
+      margin-top: 10px;
+      margin-left: 15px;
+      font-size: 24px;
+      color: #393D49;
+      font-weight: 600;
+    }
+
+    .project {
+      width: 100%;
+      height: 400px;
+
+    }
+
+    .new {
+      width: 100%;
+      height: 400px;
+    }
+
+    .view {
+      width: 100%;
+      height: 400px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layui-fluid">
+
+    <div class="layui-card">
+      <div class="layui-card-header">数据统计</div>
+      <div class="layui-card-body">
+        <!-- 数量统计 -->
+        <div class="layui-row">
+          <div class="layui-col-lg3 layui-col-md3 layui-col-sm3 ayui-col-xs3">
+            <div class="list">
+              <h3>项目分类数:</h3>
+              <p>
+                <%=procat%>
+              </p>
+              </p>
+            </div>
+          </div>
+          <div class="layui-col-lg3 layui-col-md3 layui-col-sm3 ayui-col-xs3">
+            <div class="list">
+              <h3>项目数:</h3>
+              <p>
+                <%=project%>
+              </p>
+            </div>
+          </div>
+          <div class="layui-col-lg3 layui-col-md3 layui-col-sm3 ayui-col-xs3">
+            <div class="list">
+              <h3>新闻分类数:</h3>
+              <p>
+                <%=newC%>
+              </p>
+            </div>
+          </div>
+          <div class="layui-col-lg3 layui-col-md3 layui-col-sm3 ayui-col-xs3">
+            <div class="list">
+              <h3>新闻数:</h3>
+              <p>
+                <%=news%>
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- 图标区域 -->
+        <div class="layui-row">
+          <div class="layui-col-lg4 layui-col-md4 layui-col-sm4 ayui-col-xs4">
+            <div class="layui-card">
+              <div class="layui-card-header">项目统计</div>
+              <div class="layui-card-body">
+                <div class="project">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="layui-col-lg4 layui-col-md4 layui-col-sm4 ayui-col-xs4">
+            <div class="layui-card">
+              <div class="layui-card-header">新闻统计</div>
+              <div class="layui-card-body">
+                <div class="new">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="layui-col-lg4 layui-col-md4 layui-col-sm4 ayui-col-xs4">
+            <div class="layui-card">
+              <div class="layui-card-header">访问量统计</div>
+              <div class="layui-card-body">
+                <div class="view">
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
+
+<script src="/js/echarts.min.js"></script>
+<script src="/layui/layui.js"></script>
+<script>
+  var $
+  var layer
+  var table
+  var form
+
+  layui.use(['element', 'table', 'form', 'jquery', 'layer'], function () {
+    var { element } = layui
+    table = layui.table
+    $ = layui.$
+    layer = layui.layer
+    form = layui.form
+    //项目统计
+    $.ajax({
+      type: "GET",
+      url: "/admin/echarts/bar",
+      success: (res) => {
+        // console.log(res);
+        if (res.code == 1) {
+          res.data.forEach(item => {
+            item.value = item.count
+            item.name = item.pc_name
+            delete item.count
+            delete item.pc_name
+          })
+          // console.log(res.data);
+          renderProject(res.data)
+        }
+      }
+    })
+    //新闻统计
+    $.ajax({
+      type: "GET",
+      url: "/admin/echarts/bars",
+      success: (res) => {
+        // console.log(res);
+        if (res.code == 1) {
+          res.data.forEach(item => {
+            item.value = item.count
+            item.name = item.nc_name
+            delete item.count
+            delete item.nc_name
+          })
+          // console.log(res.data);
+          renderNew(res.data)
+        }
+      }
+    })
+    //访问量统计
+    let data = [], name = []
+    $.ajax({
+      type: "GET",
+      url: "/admin/echarts/view",
+      success: (res) => {
+        if (res.code == 1) {
+          res.data.forEach(item => {
+            name.push(item.news_title)
+            data.push(item.news_visit)
+          })
+          renderView(name, data)
+        }
+      }
+    })
+  });
+
+
+
+  function renderProject(data) {
+    var myChart = echarts.init(document.querySelector('.project'));
+    window.onresize = function () {
+      myChart.resize();
+    };
+    myChart.setOption({
+      title: {
+        text: 'Referer of a Website',
+        subtext: 'Fake Data',
+        left: 'center',
+        show: false
+      },
+      tooltip: {
+        trigger: 'item'
+      },
+      legend: {
+        orient: 'vertical',
+        left: 'left'
+      },
+      series: [
+        {
+          name: '项目统计',
+          type: 'pie',
+          radius: '50%',
+          data: data,
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
+        }
+      ]
+    });
+  }
+
+
+  function renderNew(data) {
+    var myChart = echarts.init(document.querySelector('.new'));
+    window.onresize = function () {
+      myChart.resize();
+    };
+    myChart.setOption({
+      title: {
+        text: 'Referer of a Website',
+        subtext: 'Fake Data',
+        left: 'center',
+        show: false
+      },
+      tooltip: {
+        trigger: 'item'
+      },
+      legend: {
+        orient: 'vertical',
+        left: 'left'
+      },
+      series: [
+        {
+          name: '新闻统计',
+          type: 'pie',
+          radius: ['40%', '50%'],
+          data: data,
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
+        }
+      ]
+    });
+
+
+  }
+
+
+  function renderView(name, data) {
+
+    var myChart = echarts.init(document.querySelector('.view'));
+    myChart.setOption({
+      xAxis: {
+        type: 'category',
+        data: name,
+        axisLabel: {
+          interval: 0,
+          rotate: 45,
+          textStyle: {
+            color: "#a9a9a9", //更改坐标轴文字颜色
+            fontSize: 8 //更改坐标轴文字大小
+          },
+
+        }
+      },
+      yAxis: {
+        type: 'value'
+      },
+      series: [
+        {
+          data: data,
+          // data: [150, 230, 224, 218, 135, 147, 260],
+          type: 'line'
+        }
+      ]
+    })
+  }
+
+
+</script>

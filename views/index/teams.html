@@ -1,0 +1,42 @@
+<%- include("common/header.html")%>
+    <link rel="stylesheet" href="/css/index/teams.css">
+    <link rel="stylesheet" href="/css/index/project/index.css">
+    <!-- banner开始 -->
+    <section class="banner">
+        <img src="./img/subject_banner.jpg" alt="">
+    </section>
+    <!-- banner结束 -->
+    <!-- 首席团队导航 -->
+    <nav>
+        <ul class="sub_navlist">
+            <% tenam.forEach(item=>{%>
+                <li><a href="/teamDet?id=<%=item.id%>">
+                        <%=item.team_name%>
+                    </a></li>
+                <%})%>
+
+                    <!-- <li><a href="./tesms_item.html">张三</a></li> -->
+        </ul>
+    </nav>
+
+    <!-- 团队列表 -->
+    <main class="news">
+        <div class="news_list">
+            <ul>
+                <% teamifo.forEach(item=>{%>
+                    <li class="item"><a href="/teamDet?id=<%=item.id%>">
+                            <img src="<%=item.team_thumb%>" alt=""></a>
+                        <div class="item_info">
+                            <h4>
+                                <%=item.team_name%>
+                            </h4>
+                            <p>
+                                <%=item.team_content%>
+                            </p>
+                        </div>
+                    </li>
+                    <%})%>
+            </ul>
+        </div>
+    </main>
+    <%- include("common/footer.html")%>

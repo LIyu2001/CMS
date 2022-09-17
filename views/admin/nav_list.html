@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/layui/css/layui.css">
+  <style>
+    #updateBox {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layui-card">
+    <div class="layui-card-header">
+      <span class="layui-breadcrumb">
+        <a href="">导航管理</a>
+        <a><cite>查看导航</cite></a>
+      </span>
+    </div>
+    <div class="layui-card-body">
+      <form class="layui-form" action="">
+        <div class="layui-inline">
+          <div class="layui-input-inline" style="width: 200px;">
+            <!-- 输入框 -->
+            <input type="text" placeholder="请输入导航名称" autocomplete="off" class="layui-input" name="search">
+          </div>
+          <button type="button" class="layui-btn" lay-submit lay-filter="search"><i class="layui-icon layui-icon-search"
+              style="margin-right:5px;"></i>搜索</button>
+        </div>
+      </form>
+      <!-- 这里是表格标签 -->
+      <table class="layui-table tableRender"></table>
+    </div>
+  </div>
+
+
+  <div id="updateBox">
+    <form class="layui-form" action="">
+      <input type="hidden" name="nav_id" required lay-verify="required" placeholder="请输入导航标题" autocomplete="off"
+        class="layui-input">
+
+      <div class="layui-form-item">
+        <label class="layui-form-label">导航标题</label>
+        <div class="layui-input-block">
+          <input type="text" name="nav_name" required lay-verify="required" placeholder="请输入导航标题" autocomplete="off"
+            class="layui-input">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">导航别名</label>
+        <div class="layui-input-inline">
+          <input type="text" name="nav_alias" required lay-verify="required" placeholder="请输入导航别名" autocomplete="off"
+            class="layui-input">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button class="layui-btn" lay-submit lay-filter="Updateform">立即提交</button>
+          <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</body>
+
+
+</html>
+<script type="type/html" id="titleTpl1">
+  <div>
+    <a href="javascript:;" onclick="UpdateNav('{{d.nav_id}}')"><i class="layui-icon layui-icon-edit" style="
+      font-size: 30px;"></i></a>
+    <a href="javascript:;" onclick="deleteNav('{{d.nav_id}}')"><i class="layui-icon layui-icon-delete" style="
+      font-size: 30px;"></i></a>
+  </div>
+</script>
+
+
+<script type="type/html" id="titleTpl2">
+  <div>
+    <input onchange="updateSort('{{d.nav_id}}',this)" type="number" name="" value="{{d.nav_sort}}" style="width50px; text-align:center; padding-left:0;height:27px ;border-color:#989898" class="layui-input">
+  </div>
+</script>
+
+<script type="type/html" id="titleTpl3">
+  <div>
+    <span onclick="upsetShow('{{d.nav_id}}','{{d.nav_is_show?0:1}}')"class="layui-btn layui-btn-sm  {{d.nav_is_show?'':'layui-btn-danger'}}">{{d.nav_is_show?"已启用":"未启用"}}</span>
+  </div>
+</script>
+
+
+<script type="type/html" id="titleTpl4">
+  <div>
+    <input onchange="updateUrl('{{d.nav_id}}',this)" type="text" name="" value="{{d.nav_url}}" style="width50px; text-align:center; padding-left:0;height:27px ;border-color:#989898" class="layui-input">
+  </div>
+</script>
+
+
+
+
+
+<!-- 一启用，未启用 三元表达式  0，1 boolean  0为假值，1为真
+
+    boolean 假值：0,false，"",undefinded,null,Nan
+
+    var res = d.isshow? "以启用" ："为启用
+ -->
+
+
+
+<script src="/layui/layui.js"></script>
+
+<script>
+  var $
+  var layer
+  var table
+  var form
+  //更新nav_url
+  function updateUrl(id, obj) {
+
+    $.ajax({
+      type: "GET",
+      url: `/admin/nav/update?id=${id}&url=${obj.value}`,
+      success(res) {
+        let { code, msg } = res
+        if (code == 1) {
+          table.reload('idTest', {});
+        }
+        layer.msg(msg)
+
+      }
+    })
+    // console.log(id, obj.value);
+  }
+
+
+  //更新nav
+  function UpdateNav(id) {
+    console.log(id);
+    $.get(`/admin/nav/updateAll?id=${id}`, (res) => {
+      var index = layer.open({
+        title: "修改导航",
+        type: 1,
+        content: $("#updateBox")
+      })
+      //数据渲染，更新渲染
+      //Dom对象  原生js 表单元素.value；获取表单的值
+      var nav_name = document.querySelector("[name=nav_name]")
+      var nav_alias = document.querySelector("[name=nav_alias]")
+      var nav_id = document.querySelector("[name=nav_id]")
+
+      nav_name.value = res.data.nav_name
+      nav_alias.value = res.data.nav_alias
+      nav_id.value = res.data.nav_id
+
+      // $("[name=nav_name]").val(data.nav_name)
+      // $("[name=nav_alias]").val(data.nav_alias)
+      // 数据提交
+      form.on('submit(Updateform)', (data) => {
+        $.ajax({
+          url: "/admin/nav/updateAll",
+          type: "POST",
+          data: data.field,
+          dataType: "json",
+          success: (res) => {
+            let { code, msg } = res
+            if (code == 1) {
+              //窗口关闭
+              layer.close(index)
+            }
+            layer.msg(msg)
+          }
+        })
+        //表格重载
+        table.reload('idTest', {});
+
+
+        return false; //阻止页面跳转。如果需要表单跳转，去掉这段即可。
+      });
+
+    })
+
+  }
+
+
+  //删除nav
+  /***
+   * 1. 硬删除 ：删除数据库中的内容
+   * 2. 软删除 ：修改，让值成为未启用的，未启用的就不往前端渲染
+   */
+  function deleteNav(id) {
+
+    layer.open({
+      content: '确定要执行删除操作码？'
+      , btn: ['确定', '取消']
+      , yes: function (index, layero) {
+        $.get(`/admin/nav/delete?id=${id}`, (res) => {
+          let { code, msg } = res
+          if (code) {
+            table.reload('idTest', {});
+          }
+          layer.msg(msg)
+        })
+      }
+      , btn2: function (index, layero) {
+        //按钮【按钮二】的回调
+        //return false 开启该代码可禁止点击该按钮关闭
+      }
+
+    });
+    console.log(id);
+  }
+
+  //修改排序
+  /**
+   * 表单:onfocus（获取焦点），onblur(失去焦点); onchange(当失去焦点，且表单的值发生改变); onreset（表单重置）；onsubmit()
+   * 客户端 :id sort ,/admin/nav/update get,  前台响应，提示，表格重载
+   * 客户端：/admin/nav/updte 接受数据，操作数据库，给出响应
+   * 操作元素内容：
+   * 普通标签：innerHTML,innerText
+   * 表单标签：value
+  */
+  function updateSort(id, obj) {
+    $.ajax({
+      type: "GET",
+      url: `/admin/nav/update?id=${id}&sort=${obj.value}`,
+      success(res) {
+        let { code, msg } = res
+        if (code == 1) {
+          table.reload('idTest', {});
+        }
+        layer.msg(msg)
+
+      }
+    })
+    console.log(id, obj.value);
+  }
+
+
+  //修改是否展示
+  function upsetShow(id, show) {
+    //is_show
+    // console.log(id, show);
+    $.ajax({
+      type: "GET",
+      url: `/admin/nav/update?id=${id}&show=${show}`,
+      success: (res) => {
+        let { code, msg } = res
+        if (code == 1) {
+          //修改成功后重载表格
+          table.reload('idTest', {});
+
+        } else {
+
+        }
+        layer.msg(msg)
+        // console.log(res);
+      }
+    })
+
+  }
+
+
+  layui.use(['element', 'table', 'form', 'jquery', 'layer'], function () {
+    var { element } = layui
+    table = layui.table
+    $ = layui.$
+    layer = layui.layer
+    form = layui.form
+
+    //数据渲染
+    table.render({
+      elem: '.tableRender',
+      url: "/admin/nav/query",
+      cols: [[ //表头
+        // { field: "", title: `<div><input type="checkbox" name="" lay-skin="primary"></div>`, width: 80, fixed: 'left', templet: ` <div><input type="checkbox" name="" lay-skin="primary"></div>` },
+        { field: "nav_id", title: 'ID', width: 80, sort: true, fixed: 'left' },
+        { field: 'nav_name', title: '导航名称' },
+        { field: 'nav_alias', title: '导航别名' },
+        { field: 'nav_sort', title: '导航排序', templet: "#titleTpl2" },
+        { field: 'nav_is_show', title: '是否展示', templet: "#titleTpl3" },
+        { field: 'nav_url', title: '跳转路径', templet: "#titleTpl4" },
+        { field: '', title: '操作', templet: "#titleTpl1" },
+
+      ]],
+      page: true,
+      limit: 10,
+      limits: [10, 15, 20, 25],
+      id: 'idTest'
+    });
+
+
+
+    //搜索功能
+    form.on('submit(search)', function (data) {
+      console.log(data.field.search) //当前容器的全部表单字段，名值对形式：{name: value}
+
+      table.reload('idTest', {
+        where: { //设定异步数据接口的额外参数，任意设
+          search: data.field.search
+        }
+        , page: {
+          curr: 1 //重新从第 1 页开始
+        }
+      });
+
+      return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+    });
+
+    //数据修改
+  });
+
+</script>

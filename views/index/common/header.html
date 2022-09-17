@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta rel="keywords" content="建筑装饰，优秀建筑模板，提高幸福度">
+  <meta name="description" content="建筑装饰模板，提升客户体验">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+
+  <title>建筑装饰，优秀建筑模板，提高幸福度，现代家居办公</title>
+  <!-- 引入Swiper -->
+  <link rel="stylesheet" href="/js/index/swiper8/swiper-bundle.css">
+  <!-- 引入bootstrap -->
+  <link rel="stylesheet" href="/js/index/bootstrap-3.4.1-dist/css/bootstrap.min.css">
+  <!-- 引入base -->
+  <link rel="stylesheet" href="/css/index/base.css">
+  <!-- 引入公共样式 -->
+  <link rel="stylesheet" href="/css/index/common.css">
+  <!-- 引入导航栏样式 -->
+  <link rel="stylesheet" href="/css/index/index.css">
+  <!-- 图标 -->
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+  <!-- 解决ie9以下浏览器对html5新增标签的不识别
+  解决ie9以下浏览器对Css3媒体查询的不识别 -->
+  <!-- [if lt IE 9]>
+  <script src="https://fastly.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://fastly.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+  ![endif] -->
+
+</head>
+
+<body>
+  <!-- 头部开始 -->
+  <header>
+    <div class="container">
+      <!-- 左侧logo -->
+      <a href="#" class="logo" title="建筑设计">
+        <img src="/img/1642578256.png" alt="" title="建筑设计">
+      </a>
+
+      <!-- 导航栏 -->
+      <ul class="navlist hidden-xs">
+        <li><a href="/" title="网页首站">网站首页</a></li>
+        <% nav.forEach(item=>{%>
+          <li class="xm">
+            <a href="<%= item.nav_url%>?id=0">
+              <%=item.nav_name%><span class="glyphicon glyphicon-menu-down"></span>
+            </a>
+            <div class="menu">
+              <% if(item.nav_id==31){%>
+                <%pcate.forEach(elem=>{%>
+                  <div><a href="/project?id=<%=elem.pc_id%>">
+                      <%=elem.pc_name%>
+                    </a></div>
+                  <%}) %>
+                    <%}else if(item.nav_id==32){%>
+                      <%scate.forEach(elem=>{%>
+                        <div><a href="/subject?id=<%=elem.nc_id%>">
+                            <%=elem.nc_name%>
+                          </a></div>
+                        <%}) %>
+                          <%}else if(item.nav_id==33){%>
+                            <%tmber.forEach(elem=>{%>
+                              <div><a href="/about?id=<%=elem.id%>">
+                                  <%=elem.team_name%>
+                                </a></div>
+                              <%}) %>
+                                <%}%>
+            </div>
+          </li>
+          <%})%>
+            <li> <a href="/hr" title="招聘信息"> 招聘信息</a></li>
+            <li> <a href="/connect" title="联系我们"> 联系我们</a></li>
+      </ul>
+
+      <!-- 小图标 -->
+      <div class="glyphicon glyphicon-menu-hamburger navbarbtn hidden-lg hidden-md hidden-sm"></div>
+
+    </div>
+  </header>
+  <!-- 头部结束 -->

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/layui/css/layui.css">
+  <style>
+    .layui-table-cell {
+      height: 60px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layui-card">
+    <div class="layui-card-header">
+      <span class="layui-breadcrumb">
+        <a href="">首席团队管理</a>
+        <a><cite>查看团队</cite></a>
+      </span>
+    </div>
+    <div class="layui-card-body">
+      <form class="layui-form" action="">
+        <div class="layui-inline">
+          <button type="button" class="layui-btn" onclick=teamAdd()>
+            <i class="layui-icon">&#xe654;</i>
+          </button>
+          <div class="layui-input-inline" style="width: 200px;">
+            <input type="text" name="search" placeholder="请输入团队名称" autocomplete="off" class="layui-input">
+          </div>
+          <button type="button" lay-submit lay-filter="search" class="layui-btn"><i class="layui-icon layui-icon-search"
+              style="margin-right:5px;"></i>搜索</button>
+        </div>
+      </form>
+      <table class="layui-table tableRender" lay-filter="test"></table>
+    </div>
+  </div>
+
+  <!-- 这是修改盒子 -->
+  <div id="updateBox" style="display: none;">
+    <form class="layui-form" action="">
+      <!-- 隐藏域 -->
+      <input type="hidden" name="id">
+      <!-- 团队名称 -->
+      <div class="layui-form-item">
+        <label class="layui-form-label">团队名称：</label>
+        <div class="layui-input-block">
+          <input type="text" name="team_name" style="width: 520px;" required lay-verify="required" autocomplete="off"
+            class="layui-input">
+        </div>
+      </div>
+      <!-- 上传图片 -->
+      <div class="layui-form-item">
+        <label class="layui-form-label">上传图片：</label>
+        <div class="layui-input-block">
+          <blockquote style="width:70%;" class="layui-elem-quote layui-quote-nm">预览图：
+            <div>
+              <img src="" style="width: 200px;" class="thumb" alt="">
+              <!-- 新图地址 -->
+              <input type="hidden" name="team_thumb" class="newthumb">
+              <!-- 旧图地址 -->
+              <input type="hidden" name="oldteam_thumb" class="oldthumb">
+            </div>
+          </blockquote>
+        </div>
+      </div>
+      <!-- 修改图片 -->
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button type="button" class="layui-btn" id="updateImg">
+            <i class="layui-icon">&#xe67c;</i>修改图片
+          </button>
+        </div>
+      </div>
+      <!-- 提交，重置 -->
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button class="layui-btn" lay-submit lay-filter="updateform">立即提交</button>
+          <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</body>
+
+</html>
+<script src="/layui/layui.js"></script>
+<script type="text/html" id="titleTpl1">
+  <div>
+    <span onclick="isDelet('{{d.id}}','{{d.is_delete?0:1}}')" class="layui-btn layui-btn-sm {{d.is_delete?'':'layui-btn-danger'}}">{{d.is_delete?"未删除":"已删除"}}</span>
+  </div>
+</script>
+
+
+<script type="text/html" id="titleTpl">
+  <div>
+    <a href="#"><i class="layui-icon layui-icon-list" lay-event="read" style="
+      font-size: 30px;"></i></a>
+    <a href="#" onclick="updateTeam('{{d.id}}')"><i class="layui-icon layui-icon-edit" style="
+      font-size: 30px;"></i></a>
+    <a href="#" onclick="deleteTeam('{{d.id}}','{{d.team_thumb}}')"><i class="layui-icon layui-icon-delete" style="
+      font-size: 30px;"></i></a>
+  </div>
+</script>
+
+
+
+<script>
+  var $, layer, tableIns, form;
+  //添加团队
+  function teamAdd() {
+    location.href = `/admin/team/add`;
+  }
+  //修改-删除信息
+  function isDelet(id, flag) {
+    // console.log(id, flag);
+    $.ajax({
+      type: "GET",
+      url: `/admin/team/update?id=${id}&flag=${flag}`,
+      success: (res => {
+        //console.log(res);
+        let { code, msg } = res;
+        if (code == 1) {
+          tableIns.reload();
+        }
+        layer.msg(msg);
+      })
+    })
+  }
+
+  //修改
+  function updateTeam(id) {
+    $.ajax({
+      type: "GET",
+      url: `/admin/team/updateAll?id=${id}`,
+      dataType: "json",
+      success: (res) => {
+        if (res.code == 1) {
+          var index = layer.open({
+            title: "修改团队信息",
+            type: 1,
+            content: $("#updateBox")
+          })
+          let data = res.data;
+
+          $("[name=team_name]").val(data.team_name);
+          $("[name=id]").val(data.id);
+          $(".thumb").attr("src", data.team_thumb);
+          $(".oldthumb").val(data.team_thumb);
+
+          //数据提交
+          form.on("submit(updateform)", (data) => {
+            console.log(data);
+            $.ajax({
+              type: "POST",
+              url: "/admin/team/updateAll",
+              data: data.field,
+              dataType: "json",
+              success: (res) => {
+                console.log(res);
+                if (res.code == 1) {
+                  tableIns.reload();
+                  layer.close(index);
+                }
+                layer.msg(res.msg);
+              }
+            })
+            return false;
+          })
+        }
+      }
+    })
+  }
+  //删除
+  function deleteTeam(id, thumb) {
+    layer.open({
+      title: "团队信息删除",
+      content: '确定要执行删除操作吗？',
+      btn: ['确定', '取消'],
+      yes: function (index, layero) {
+        $.get(`/admin/team/delete?id=${id}&thumb=${thumb}`, (res) => {
+          if (res.code) {
+            tableIns.reload();
+          }
+          layer.msg(res.msg);
+        })
+      }
+    });
+  }
+
+  layui.use(['element', 'table', 'jquery', 'layer', 'upload', 'form'], function () {
+    var { element, table, upload } = layui;
+    $ = layui.$, layer = layui.layer, form = layui.form;
+    //渲染数据
+    tableIns = table.render({
+      elem: ".tableRender",
+      url: "/admin/team/query",
+      cols: [[
+
+        { field: "id", title: "ID", width: 80, sort: true },
+        { field: "team_name", title: "团队成员名" },
+        {
+          field: "team_thumb", title: "成员图片", templet: function (d) {
+            return `<div class="thumbTpl">
+                              <img src="${d.team_thumb}" alt="">
+                          </div>`
+          }
+        },
+        { field: "is_delete", title: "是否删除", templet: "#titleTpl1" },
+        { field: "", title: "操作", templet: "#titleTpl" }
+      ]],
+      page: true,
+      limit: 5,
+      limits: [5, 10, 15, 20]
+    })
+
+    //图片上传
+    upload.render({
+      elem: "#updateImg",
+      url: "/admin/team/upload",
+      accept: "images",
+      acceptMime: "image/*",
+      size: 500,
+      done: (res) => {
+        if (res.code == 1) {
+          $(".thumb").attr("src", res.url);
+          $(".newthumb").val(res.url);
+        } else {
+          layer.msg("图片上传失败");
+        }
+      }
+    })
+
+    //表格行事件
+    table.on('tool(test)', function (obj) {
+      //console.log(obj);
+      switch (obj.event) {
+        case 'read':
+          location.href = `/admin/team/read?id=${obj.data.id}`;
+          break;
+      }
+    });
+
+    //搜索
+    form.on("submit(search)", (data) => {
+      //表格重载
+      tableIns.reload({
+        where: {
+          search: data.field.search
+        },
+        page: {
+          curr: 1
+        }
+      })
+    })
+  })
+</script>

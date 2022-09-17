@@ -1,0 +1,109 @@
+<%- include("common/header.html")%>
+
+  <link rel="stylesheet" href="/css/index/perDet.css">
+  <link rel="stylesheet" href="/css/index/project/index.css">
+  <link rel="stylesheet" href="/css/index/gally.css">
+  <!-- banner部分 -->
+  <div class="catbaner">
+    <img src="/img/subject_banner.jpg" alt="演示图片">
+  </div>
+
+  <!-- 导航条部分 -->
+  <div class="catNav">
+    <div class="detnav">
+      <span class="glyphicon glyphicon-home"></span>
+      <span><a href="/">网站首页</a>&nbsp;/</span>
+      <span><a href="/project">项目案例</a>&nbsp;/</span>
+      <span><a href="/">
+          <%=proDet.pc_name%>
+        </a></span>
+    </div>
+  </div>
+  <!-- 内容部分 -->
+  <div class="container">
+    <div class="textare">
+      <div class="left">
+        <div class="pic">
+          <div style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff" class="swiper mySwiper2">
+            <div class="swiper-wrapper">
+              <% proDet.project_banner.forEach((item)=>{ %>
+                <div class="swiper-slide">
+                  <img src="<%=item%>" />
+                </div>
+                <%})%>
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+          </div>
+          <div thumbsSlider="" class="swiper mySwiper">
+            <div class="swiper-wrapper">
+              <% proDet.project_banner.forEach((item)=>{ %>
+                <div class="swiper-slide">
+                  <img src="<%=item%>" />
+                </div>
+                <%})%>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="right">
+        <div class="content">
+          <div class="dis">
+            <h2>
+              <%=proDet.project_title%>
+            </h2>
+            <h4>
+              <%=proDet.ctime%>
+            </h4>
+            <div class="text">
+              <%-proDet.project_content%>
+            </div>
+          </div>
+          <div class="btn_group buttonBox">
+            <button type="button" class="btn btn-default leftBtn">
+              <% if(prev=="没有了" ){ %>
+                上一篇:<%=prev%>
+                  <%}else{%>
+                    <a href="/detail?id=<%=prev.project_id%>">
+                      <%=prev.project_title%>
+                    </a>
+                    <%}%>
+            </button>
+            <button type="button" class="btn btn-default rightBtn">
+              <% if(next=="没有了" ){%>
+                下一篇:<%=next%>
+                  <%}else{%>
+                    <a href="/detail?id=<%=next.project_id%>">
+                      <%=next.project_title%>
+                    </a>
+                    <%}%>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+
+  <%- include("common/footer.html")%>
+
+    <script>
+      var swiper = new Swiper(".mySwiper", {
+        spaceBetween: 10,
+        slidesPerView: 4,
+        freeMode: true,
+        watchSlidesProgress: true,
+      });
+      var swiper2 = new Swiper(".mySwiper2", {
+        spaceBetween: 10,
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+        thumbs: {
+          swiper: swiper,
+        },
+      });
+    </script>

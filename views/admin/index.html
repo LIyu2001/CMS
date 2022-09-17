@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>建筑装饰管理系统</title>
+  <link rel="stylesheet" href="/layui/css/layui.css">
+  <!-- <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"> -->
+</head>
+
+<body>
+  <div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+      <div class="layui-logo layui-hide-xs layui-bg-black">后台管理系统</div>
+      <!-- 头部区域（可配合layui 已有的水平导航） -->
+      <ul class="layui-nav layui-layout-right">
+        <li class="layui-nav-item">
+          <a href=""><img src="/profiy.jpg" class="layui-nav-img">
+            <%=username%>
+          </a>
+          <dl class="layui-nav-child">
+            <dd><a href="javascript:;">修改信息</a></dd>
+            <dd><a href="/admin/login/logout">退出登陆 </a></dd>
+          </dl>
+        </li>
+        <li class=" layui-nav-item">
+          <a href="/" target="_blank">前台页面</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+      <div class="layui-side-scroll">
+        <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+        <ul class="layui-nav layui-nav-tree" lay-filter="test">
+          <!-- 导航管理 -->
+          <li class="layui-nav-item">
+            <a href="javascript:;">导航管理</a>
+            <dl class="layui-nav-child">
+              <dd>
+                <a href="/admin/nav/insert" target="content"><i class="layui-icon layui-icon-right"></i>添加导航</a>
+              </dd>
+              <dd>
+                <a href="/admin/nav/" target="content"><i class="layui-icon layui-icon-right"></i>查看导航</a>
+              </dd>
+            </dl>
+          </li>
+          <!-- 轮播图管理 -->
+          <li class="layui-nav-item">
+            <a href="javascript:;">轮播图管理</a>
+            <dl class="layui-nav-child">
+              <dd>
+                <a href="/admin/banner/insert" target="content"><i class="layui-icon layui-icon-right"></i>添加轮播图</a>
+              </dd>
+              <dd>
+                <a href="/admin/banner/" target="content"><i class="layui-icon layui-icon-right"></i>查看轮播图</a>
+              </dd>
+            </dl>
+            </dl>
+          </li>
+          <li class="layui-nav-item">
+            <a href="javascript:;">专题管理</a>
+            <dl class="layui-nav-child">
+              <dd>
+                <a href="/admin/subject/insert" target="content"><i class="layui-icon layui-icon-right"></i>添加专题</a>
+              </dd>
+              <dd>
+                <a href="/admin/subject/" target="content"><i class="layui-icon layui-icon-right"></i>查看专题</a>
+              </dd>
+              <dd>
+                <a href="/admin//subjectcate/" target="content"><i class="layui-icon layui-icon-right"></i>专题分类管理</a>
+              </dd>
+            </dl>
+          </li>
+          <!-- 项目管理 -->
+          <li class="layui-nav-item">
+            <a href="javascript:;">项目管理</a>
+            <dl class="layui-nav-child">
+              <dd>
+                <a href="/admin/project/insert" target="content"><i class="layui-icon layui-icon-right"></i>添加项目</a>
+              </dd>
+              <dd>
+                <a href="/admin/project/" target="content"><i class="layui-icon layui-icon-right"></i>查看项目</a>
+              </dd>
+              <dd>
+                <a href="/admin/procat/" target="content"><i class="layui-icon layui-icon-right"></i>分类管理</a>
+              </dd>
+            </dl>
+          </li>
+          <!-- 首席团队管理 -->
+          <li class="layui-nav-item">
+            <a href="javascript:;">首席团队管理</a>
+            <dl class="layui-nav-child">
+              <dd>
+                <a href="/admin/team/add" target="content"><i class="layui-icon layui-icon-right"></i>添加团队</a>
+              </dd>
+              <dd>
+                <a href="/admin/team/list" target="content"><i class="layui-icon layui-icon-right"></i>查看团队</a>
+              </dd>
+            </dl>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+
+    <div class="layui-body">
+      <!-- 内容主体区域 -->
+      <div style="padding: 15px;height: 100%;">
+        <iframe src="/admin/echarts/" name="content" frameborder="0" scrolling="yes"
+          style="width: 100%;height: 100%;"></iframe>
+
+      </div>
+    </div>
+
+    <div class="layui-footer">
+      <!-- 底部固定区域 -->
+      到底啦！
+    </div>
+  </div>
+  <script src="/layui/layui.js"></script>
+  <script>
+    //JS 
+    layui.use(['element', 'layer', 'util'], function () {
+      var {element,layer,util,$} = layui
+
+      //头部事件
+      util.event('lay-header-event', {
+        //左侧菜单事件
+        menuLeft: function (othis) {
+          layer.msg('展开左侧菜单的操作', { icon: 1 });
+        }
+        , menuRight: function () {
+          layer.open({
+            type: 1
+            , content: '<div style="padding: 15px;">处理右侧面板的操作</div>'
+            , area: ['260px', '100%']
+            , offset: 'rt' //右上角
+            , anim: 5
+            , shadeClose: true
+          });
+        }
+      });
+
+    });
+  </script>
+</body>
+
+</html>

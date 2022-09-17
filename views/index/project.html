@@ -1,0 +1,59 @@
+<%- include("common/header.html")%>
+
+    <link rel="stylesheet" href="/css/index/project/base.css">
+    <link rel="stylesheet" href="/css/index/project/common.css">
+    <link rel="stylesheet" href="/css/index/project/index.css">
+
+    <div class="pbanner">
+        <img src="img/subject_banner.jpg" alt="" width="100%" height="593px">
+    </div>
+    <div class="nav">
+        <ul>
+            <% procat.forEach(item=>{%>
+                <a href="/project?id=<%=item.pc_id%>">
+                    <%=item.pc_name%>
+                </a>
+                <%})%>
+        </ul>
+    </div>
+    <div class="picture container">
+        <% project.forEach(item=>{ %>
+            <div class="pic1">
+
+                <a href="/detail?id=<%=item.project_id%>">
+                    <img src="<%=item.project_thumb%>" alt=" " width="260px">
+                    <ul><a href="/detail?id=<%=item.project_id%>">
+                            <%=item.project_title%>
+                        </a></ul>
+                </a>
+            </div>
+            <%})%>
+
+    </div>
+
+    <div class="pages container">
+        <div class="button pager">
+            <span>
+                <a href="/project?id=<%=pc_id%>&limit=3&page=<%=(page*1-1)<=0?1:(page*1-1)%>">上一页</a>
+            </span>
+            <%for(var i=1;i <=totalPage;i++){%>
+
+                <%if(page==i){%>
+                    <a href="/project?id=<%= pc_id%>&page=<%= i %>&limit=3" style="color:red;">
+                        <%=i%>
+                    </a>
+                    <%}else{%>
+                        <a href="/project?id=<%= pc_id%>&page=<%= i %>&limit=3">
+                            <%=i%>
+                        </a>
+                        <%}%>
+
+                            <%}%>
+                                <span>
+                                    <a
+                                        href="/project?id=<%=pc_id%>&limit=3&page=<%=(page*1+1)>totalPage?totalPage:(page*1+1)%>">下一页</a>
+                                </span>
+        </div>
+
+    </div>
+    <%- include("common/footer.html")%>

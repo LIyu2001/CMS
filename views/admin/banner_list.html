@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/layui/css/layui.css">
+  <!-- <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"> -->
+  <style>
+    .layui-table-cell {
+      height: 50px;
+    }
+
+    .updateinfo {
+      display: none;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="layui-card">
+    <div class="layui-card-header">
+      <span class="layui-breadcrumb">
+        <a href="">轮播图管理</a>
+        <a><cite>查看轮播图</cite></a>
+      </span>
+    </div>
+    <div class="layui-card-body">
+      <!-- <form class="layui-form" action="">
+        <div class="layui-inline">
+          <div class="layui-input-inline" style="width: 200px;">
+            <input type="text" placeholder="请输入搜索内容" autocomplete="off" class="layui-input">
+          </div>
+          <button type="button" class="layui-btn"><i class="layui-icon layui-icon-search"
+              style="margin-right:5px;"></i>搜索</button>
+        </div>
+      </form> -->
+      <!-- 表格数据 -->
+      <table class="layui-table bannerTable"></table>
+    </div>
+  </div>
+
+
+
+  <!-- 修改弹层 -->
+  <div class="updateinfo">
+    <form class="layui-form" action="">
+      <div class="layui-form-item">
+        <!-- 隐藏域，往后台传id -->
+        <input type="hidden" name="banner_id" required lay-verify="required" autocomplete="off"
+          class="layui-input bannerid">
+        <label class="layui-form-label">图片名称</label>
+        <div class="layui-input-block">
+          <input type="text" name="banner_name" required lay-verify="required" placeholder="请输入图片名称" autocomplete="off"
+            class="layui-input bannername">
+        </div>
+      </div>
+      <div class="layui-input-block">
+        <blockquote class="layui-elem-quote">预览图:
+          <div>
+            <img src="" class="imgs" style="width: 500px;">
+            <!-- 隐藏域，将修改的图片路径传过去，替换数据库中的旧值 -->
+            <input type="hidden" class="gthumb" name="banner_img">
+            <!-- 这是旧图片的文件名，用来删除旧文件 -->
+            <input type="hidden" class="deleteimg" name="banner_delete">
+          </div>
+        </blockquote>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button type="button" class="layui-btn" id="upload">
+            <i class="layui-icon">&#xe67c;</i>上传图片
+          </button>
+        </div>
+      </div>
+      <!-- 提交按钮 -->
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button class="layui-btn" lay-submit lay-filter="bannerUp">立即提交</button>
+          <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+</body>
+
+</html>
+
+<!-- 模板  -->
+<script id="image" type="text/html">
+  <img src="{{d.banner_img}}" >
+</script>
+
+
+<script type="type/html" id="titleTpl1">
+  <div>
+    <a href="javascript:;" onclick="updateAll('{{d.banner_id}}')">
+      <i class="layui-icon  layui-icon-edit" style="
+      font-size: 30px;"></i>
+    </a>
+    <a href="javascript:;" onclick="deleteBanner('{{d.banner_id}}','{{d.banner_img}}')" >
+      <i class="layui-icon layui-icon-delete" style="
+      font-size: 30px;"></i>
+    </a>
+  </div>
+</script>
+
+<script type="type/html" id="titleTpl2">
+  <div>
+    <input onchange="updateSort('{{d.banner_id}}',this)" type="number"  value="{{d.banner_sort}}" class="layui-input" style="text-align:center;padding-left:0;height:27px;border-color:#989898">
+  </div>
+</script>
+
+
+
+
+<script src="/layui/layui.js"></script>
+<script>
+  var $
+  var table
+  var layer
+  var form
+  var upload
+  //图片删除
+  function deleteBanner(id, img) {
+
+    var index = layer.open({
+      title: "删除轮播图信息",
+      content: '确定执行删除操作吗？'
+      , btn: ['确定', '取消']
+      , yes: function (index, layero) {
+        //发起ajax请求
+        $.ajax({
+          type: "GET",
+          url: `/admin/banner/delete?id=${id}&img=${img}`,
+          dataType: "json",
+          success: (res) => {
+            var { code, msg } = res
+            if (code == 1) {
+              //成功，表格重载，提示信息
+              table.reload('idTest', {});
+
+            } else {
+              //提示信息，弹框关闭
+            }
+            layer.msg(res.msg)
+            layer.close(index)
+          }
+        })
+
+      }
+      , btn2: function (index, layero) {
+        //return false 开启该代码可禁止点击该按钮关闭
+      }
+
+    });
+
+
+  }
+
+  //排序修改
+  function updateSort(id, obj) {
+    // console.log(id, obj.value);
+    //ajax发送请求get
+    $.ajax({
+      type: "GET",
+      url: `/admin/banner/update?banner_id=${id}&banner_sort=${obj.value}`,
+      success: (res) => {
+        var { code, msg } = res
+        if (code == 1) {
+          table.reload('idTest', {});
+        }
+        layer.msg(msg)
+      }
+    })
+  }
+
+  //修改(图片名，图片)
+  function updateAll(id) {
+    // 弹出层
+    var index2 = layer.open({
+      type: 1,
+      title: '修改轮播图信息',
+      area: ['700px', '600px'],
+      content: $(".updateinfo")
+    });
+
+
+    //ajax发送get请求，将先进行获取,数据渲染
+    $.ajax({
+      type: "GET",
+      url: `/admin/banner/query?banner_id=${id}`,
+      dataType: "json",
+      success: (res) => {
+        var { banner_id, banner_name, banner_img } = res.data
+        /**
+         * js：DOM对象，
+         * jquery:jquery对象
+        */
+        document.querySelector(".bannerid").value = banner_id
+        document.querySelector(".bannername").value = banner_name
+        //原生Js获取设置对象的src
+        // document.querySelector(".imgs").src = banner_img
+        //jquery对象设置src
+        $(".imgs").attr("src", banner_img)
+        //旧图地址的渲染
+        $(".deleteimg").val(banner_img)
+      }
+    })
+    /**
+     * 修改数据
+     * 1. 不修改数据：name ，sort ，img ,id
+     * 2. 修改图片: name ，sortt ，img(新图) ，id ,oldimg(旧图地址) 
+    */
+    //上传图片,upload模块
+
+    //表单提交
+    form.on('submit(bannerUp)', function (data) {
+      //ajax提交数据
+      $.ajax({
+        type: "POST",
+        url: "/admin/banner/updateAll",
+        data: data.field,
+        dataType: "json",
+        success(res) {
+          var { code, msg } = res
+          if (code == 1) {
+            //表格重载，关闭弹框
+            table.reload('idTest', {});
+          }
+          layer.close(index2)
+          layer.msg(msg)
+        }
+      })
+
+      return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+    });
+
+
+  }
+
+
+  layui.use(['element', 'table', 'jquery', 'layer', 'form', 'upload'], function () {
+    var { element } = layui
+    table = layui.table
+    $ = layui.$
+    layer = layui.layer
+    form = layui.form
+    upload = layui.upload
+    // 表格数据渲染
+    table.render({
+
+      elem: '.bannerTable',
+      url: '/admin/banner/query', //数据接口
+      // page: true, //开启
+      cols: [[ //表头
+        { field: 'banner_id', title: 'ID', sort: true, fixed: 'left' },
+        { field: 'banner_name', title: '图片名' },
+
+        {
+          //   field: 'banner_img', title: '图片', templet: function (d) {
+          //     return `< div >
+          //             <img src="${d.banner_img}" style="width:50px">
+          //           </div>`
+          //   }
+          // field: 'banner_img', title: '图片', templet: `<div><img src="{{d.banner_img}}" style="width:60px"></div>`
+          field: 'banner_img', title: '图片', templet: "#image"
+        },
+        { field: 'banner_sort', title: '排序', templet: '#titleTpl2' },
+        { field: '', title: '操作', templet: '#titleTpl1' },
+      ]],
+      id: 'idTest'
+    });
+
+    //图片上传模块
+    var uploadInst = upload.render({
+      elem: '#upload', //绑定元素
+      url: '/admin/banner/upload', //上传接口
+      done: function (res) {
+        //上传完毕回调
+        if (res.code == 1) {
+          //将路径传给预览图区域
+          document.querySelector(".imgs").src = res.url
+          //将路径给隐藏域中的表单，待会方便实现数据的提交
+          // console.log(res.url);
+          $(".gthumb").val(res.url)
+        } else {
+          layer.msg("图片上传失败")
+        }
+      }
+    });
+  })
+</script>

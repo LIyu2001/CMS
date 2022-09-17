@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/layui/css/layui.css">
+  <style>
+    .layui-card-body {
+      height: 825px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layui-card">
+    <div class="layui-card-header">
+      <span class="layui-breadcrumb">
+        <a href="">首席团队管理</a>
+        <a><cite>添加团队</cite></a>
+      </span>
+    </div>
+    <div class="layui-card-body">
+      <form class="layui-form" action="" style="width: 800px;height: 400px;">
+        <!-- 团队名称： -->
+        <div class="layui-form-item">
+          <label class="layui-form-label">团队名称：</label>
+          <div class="layui-input-block">
+            <input type="text" name="team_name" required lay-verify="required" placeholder="请输入团队名称" autocomplete="off"
+              class="layui-input">
+          </div>
+        </div>
+        <!-- 团队缩略图 -->
+        <div class="layui-form-item">
+          <label class="layui-form-label">团队缩略图:</label>
+          <div class="layui-input-block">
+            <button type="button" class="layui-btn" id="thumb">
+              <i class="layui-icon">&#xe67c;</i>上传图片
+            </button>
+          </div>
+        </div>
+        <!-- 预览图 -->
+        <div class="layui-form-item">
+          <div class="layui-input-block">
+            <blockquote class="layui-elem-quote layui-quote-nm">预览图：
+              <div><img src="" style="width: 500px;" class="thumb" alt=""></div>
+              <input type="hidden" name="team_thumb">
+            </blockquote>
+          </div>
+        </div>
+        <!-- 内容展示 -->
+        <div class="layui-form-item">
+          <label class="layui-form-label">内容展示：</label>
+          <div class="layui-input-block">
+            <textarea id="richText" name="team_content" style="display: none;"></textarea>
+          </div>
+        </div>
+        <!-- 提交，重置 -->
+        <div class="layui-form-item">
+          <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="teamForm">提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>
+
+<script src="/layui/layui.js"></script>
+<script>
+  layui.use(["element", 'form', 'jquery', 'layer', 'upload', 'layedit'], function () {
+    var { element, form, $, layer, upload, layedit } = layui;
+
+    //上传图片
+    upload.render({
+      elem: "#thumb",
+      url: "/admin/team/upload",
+      done: (res) => {
+        if (res.code == 1) {
+          $(".thumb").attr("src", res.url);
+          $("[name=team_thumb]").val(res.url);
+        } else {
+          layer.msg("图片上传失败");
+        }
+      }
+    })
+
+    //富文本编辑器
+    var layeditIns = layedit.build("richText");
+
+    //数据上传
+    form.on("submit(teamForm)", (data) => {
+      data.field.team_content = layedit.getContent(layeditIns);
+      //console.log(data.field);
+      $.ajax({
+        type: "POST",
+        url: "/admin/team/add",
+        data: data.field,
+        dataType: "json",
+        success: (res) => {
+          if (res.code == 1) {
+            layer.open({
+              title: "添加团队信息",
+              content: res.msg,
+              icon: 1
+            })
+          } else {
+            layer.open({
+              title: "添加团队信息",
+              content: res.msg,
+              icon: 2
+            })
+          }
+        }
+      })
+      return false;
+    })
+  })
+</script>

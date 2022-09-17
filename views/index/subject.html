@@ -1,0 +1,66 @@
+<%- include('common/header.html') %>
+  <!-- 引入所有专题样式 -->
+  <link rel="stylesheet" href="/css/index/subject.css">
+
+  <!-- banner开始 -->
+  <section class="banner">
+    <img src="/img/subject_banner2.jpg" alt="" style="height: 632px;">
+  </section>
+  <!-- banner结束 -->
+
+  <!-- 所有专题导航 -->
+  <nav>
+    <ul class="sub_navlist">
+      <% subCate.forEach(item=>{ %>
+        <li><a href="/subject?id=<%= item.nc_id %>">
+            <%= item.nc_name %>
+          </a></li>
+        <% }) %>
+    </ul>
+  </nav>
+
+  <!-- 所有新闻列表 -->
+  <main class="news">
+    <div class="news_list">
+      <ul>
+        <% news.forEach(item=>{ %>
+          <li class="item col-lg-3 col-md-3 col-sm-2 col-xs-1"><a href="/subjectAbout?id=<%= item.news_id %>">
+              <img src="<%= item.news_thumb %>" alt="">
+              <h4>
+                <%= item.news_title %>
+              </h4>
+              <div class="line"></div>
+              <p>
+                <%= item.news_desc %>
+              </p>
+            </a></li>
+          <% }) %>
+      </ul>
+    </div>
+    <div class="pager">
+      <span class="preSpan"><a
+          href="/subject?id=<%=id%>&limit=<%=limit%>&page=<%= (page*1-1)<=0?1:(page*1-1) %>">上一页</a></span>
+      <% for(var i=1; i<=totalPage; i++){ %>
+        <%if(page==i){%>
+          <a href="/subject?id=<%=id%>&limit=<%=limit%>&page=<%=i%>" style="color: red;">
+            <%= i %>
+          </a>
+          <%}else{%>
+            <a href="/subject?id=<%=id%>&limit=<%=limit%>&page=<%=i%>">
+              <%= i %>
+            </a>
+            <%}%>
+
+              <% } %>
+                <span class="nextSpan"><a
+                    href="/subject?id=<%=id%>&limit=<%=limit%>&page=<%=(page*1+1)>=totalPage?totalPage:(page*1+1)%>">下一页</a></span>
+    </div>
+  </main>
+
+  <!-- 底部 -->
+  <%- include('common/footer.html') %>
+    </body>
+
+    </html>
+
+    <script src="/js/index/index.js"></script>

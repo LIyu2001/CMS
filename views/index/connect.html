@@ -1,0 +1,54 @@
+<%- include("common/header.html")%>
+  <link rel="stylesheet" href="/css/index/connect/connect.css">
+  <link rel="stylesheet" href="/css/index/index.css">
+  <link rel="stylesheet" href="/static/css/index/connect/connect.css">
+  <script type="text/javascript"
+    src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=aWlK8EQaA1jGkbNSGUSvYzr0VXIM6I8V">
+    </script>
+  <div class="pic">
+    <img src="img/connect1.jpg" alt="">
+  </div>
+  <!-- 导航 -->
+  <div class="container">
+
+    <div class="info">
+      <div class="text03">
+        <h1>联系方式</h1>
+        <a href="http://liyublogs.top/">
+          <h2>family magician有限责任公司</h2>
+        </a>
+        <ul>
+          <li>地址：上海浦东花园石桥路28弄</li>
+          <li>邮编：100085</li>
+          <li>传真：01060606666-1101</li>
+        </ul>
+      </div>
+    </div>
+    <div id="map">
+      <!-- <img src="img/map2.jpg" alt=""> -->
+    </div>
+
+  </div>
+
+
+
+  </style>
+
+
+  <%- include("common/footer.html")%>
+
+
+    <script type="text/javascript">
+      var map = new BMapGL.Map("map");
+      // 创建地图实例 
+      var point = new BMapGL.Point(121.508506, 31.238794);
+      // 创建点坐标 
+      map.centerAndZoom(point, 15);
+      // 初始化地图，设置中心点坐标和地图级别
+      map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
+
+      var marker = new BMapGL.Marker(point);
+      map.addOverlay(marker);
+      var navi3DCtrl = new BMapGL.NavigationControl3D();  // 添加3D控件
+      map.addControl(navi3DCtrl);
+    </script>

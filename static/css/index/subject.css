@@ -1,0 +1,133 @@
+/* banner */
+.banner img {
+    width: 100%;
+}
+
+/* subject导航开始 */
+nav {
+    width: 100%;
+    height: 55.14px;
+}
+
+.sub_navlist {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    color: #2a333c;
+    background-color: #f5f5f5;
+}
+
+.sub_navlist li a {
+    height: 35.14px;
+    padding: 5px 10px;
+    float: left;
+    text-align: center;
+    font-size: 16px;
+}
+
+.sub_navlist li a:hover {
+    text-decoration: none;
+    color: #2a333c;
+}
+
+/* subject导航结束 */
+
+/* 列表开始 */
+.news {
+    width: 100%;
+    padding: 30px 0;
+}
+
+.news_list {
+    width: 1170px;
+    height: 460px;
+    margin: 0 auto;
+    padding: 30px 0;
+}
+
+.news_list .item {
+    width: 390px;
+    height: 418.71px;
+    margin: 0 0 26.25px;
+    padding: 50px;
+    background-color: #fff;
+}
+
+.news_list .item a:hover {
+    text-decoration: none;
+    list-style: none;
+}
+
+.news_list .item a:hover .line {
+    width: 298.75px;
+}
+
+.news_list .item img {
+    width: 298.75px;
+    height: 186.71px;
+}
+
+.news_list .item h4 {
+    width: 298.75px;
+    height: 46px;
+    margin: 11px 0;
+    line-height: 46px;
+    font-size: 16px;
+}
+
+.news_list .item .line {
+    width: 10px;
+    height: 1px;
+    background-color: #2a333c;
+    transition: width 0.5s;
+}
+
+.news_list .item p {
+    width: 298.75px;
+    height: 50px;
+    margin: 10px 0 14px;
+    font-size: 13px;
+    color: #848484;
+    line-height: 24px;
+    overflow: hidden;
+}
+.pager a{
+    display: inline-block;
+    width: 50px;
+    text-decoration: none;
+}
+/* 列表结束 */
+
+/* 底部footer */
+footer {
+    width: 100%;
+    height: 254.8px;
+    text-align: center;
+    font-size: 14px;
+    padding: 20px 0;
+    line-height: 1.8;
+    background-color: #f5f5f5;
+}
+
+footer .line1 {
+    margin-top: 100px;
+}
+
+footer .line3 {
+    margin: 0 0 14px;
+}
+
+footer .line4 {
+    color: #848484;
+}
+
+footer a {
+    display: inline-block;
+    margin: 0 10px;
+    text-decoration: #000;
+    font-weight: bold;
+}
+
+footer a:hover {
+    text-decoration: none;
+}

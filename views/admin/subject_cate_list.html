@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>专题分类</title>
+  <link rel="stylesheet" href="/layui/css/layui.css">
+  <style>
+    #updateBox {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layui-card">
+    <div class="layui-card-header">
+      <span class="layui-breadcrumb">
+        <a href="">专题管理</a>
+        <a><cite>专题分类管理</cite></a>
+      </span>
+    </div>
+    <div class="layui-card-body">
+      <form class="layui-form" action="">
+        <div class="layui-inline">
+          <div class="layui-input-inline" style="width: 200px;">
+            <input type="text" name="search" placeholder="请输入专题分类名称" autocomplete="off" class="layui-input">
+          </div>
+          <button type="button" lay-submit lay-filter="search" class="layui-btn"><i class="layui-icon layui-icon-search"
+              style="margin-right:5px;"></i>搜索</button>
+          <button onclick="addSubjectCate()" type="button" class="layui-btn" style="margin-left: 600px;">添加专题分类</button>
+        </div>
+      </form>
+      <!-- 这里是表格标签 -->
+      <table class="layui-table tableRender"></table>
+    </div>
+  </div>
+  <!-- 修改弹层 -->
+  <div id="updateBox">
+    <form class="layui-form" action="">
+      <div class="layui-form-item">
+        <label class="layui-form-label">专题名称</label>
+        <div class="layui-input-block">
+          <input type="text" name="nc_name" required lay-verify="required" placeholder="输入专题分类名称" autocomplete="off"
+            class="layui-input">
+        </div>
+        <div class="layui-form-item">
+          <div class="layui-input-block">
+            <button onclick="addCate()" class="layui-btn" lay-submit lay-filter="subjectCateForm">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+          </div>
+        </div>
+    </form>
+  </div>
+</body>
+
+</html>
+<script src="/layui/layui.js"></script>
+
+<script type="text/html" id="titleTpl1">
+  <a href="#"><i class="layui-icon layui-icon-delete" onclick="deleteNews('{{d.nc_id}}')" style="
+    font-size: 30px;"></i></a>
+</script>
+<script type="text/html" id="titleTpl2">
+  <div>
+    <span onclick="isDelete('{{d.nc_id}}','{{d.nc_is_delete?0:1}}')" class="layui-btn layui-btn-sm {{d.nc_is_delete?'layui-btn-danger':''}}">{{d.nc_is_delete?'已删除':'未删除'}}</span>
+  </div>
+</script>
+
+<script>
+  var $, layer, form, tableIns
+
+  // 修改是否删除专题分类 软删除
+  function isDelete(id, isDelete) {
+    $.get(`/admin/subjectcate/update?id=${id}&isDelete=${isDelete}`, (res) => {
+      let { code, msg } = res
+      if (code == 1) {
+        tableIns.reload()
+      }
+      layer.msg(msg)
+    })
+  }
+  // 删除时候弹出框  硬删除
+  function deleteNews(id) {
+    layer.open({
+      content: '确定永久删除吗？',
+      btn: ['确定', '取消'],
+      yes: function () {
+        $.get(`/admin/subjectcate/delete2?id=${id}`, (res) => {
+          let { code, msg } = res
+          if (code) {
+            tableIns.reload()
+          }
+          layer.msg(msg)
+        })
+      }
+    })
+  }
+  // 添加专题分类
+  var index = ''
+  function addSubjectCate() {
+    $.post(`/admin/subjectcate/insert`, (res) => {
+      index = layer.open({
+        title: '添加专题分类',
+        type: '1',
+        content: $('#updateBox')
+      })
+    })
+  }
+  function addCate() {
+    form.on('submit(subjectCateForm)', (data) => {
+      $.ajax({
+        type: 'POST',
+        url: '/admin/subjectcate/insert',
+        data: data.field,
+        dataType: 'json',
+        success: res => {
+          let { code, msg } = res
+          if (code == 1) {
+            tableIns.reload()
+            layer.close(index)
+          }
+          layer.msg(msg)
+        }
+      })
+      return false
+      // console.log(data.field.nc_name)
+    })
+  }
+
+  layui.use(['element', 'table', 'form', 'jquery', 'layer'], function () {
+    var { element, table } = layui
+    $ = layui.$
+    layer = layui.layer
+    form = layui.form
+    tableIns = table.render({
+      elem: '.tableRender',
+      url: "/admin/subjectcate/query",
+      cols: [[ //表头
+        // { field: "", title: '<div><input type="checkbox" name="" lay-skin="primary"></div>', width: 80, fixed: 'left', templet: '<div><input type="checkbox" name="" lay-skin="primary"></div>' },
+        { field: "nc_id", title: 'ID', width: 80, sort: true, fixed: 'left' },
+        { field: 'nc_name', title: '专题分类名称' },
+        { field: 'nc_is_delete', title: '是否删除', templet: '#titleTpl2' },
+        { field: '', title: '操作', templet: '#titleTpl1' },
+
+      ]],
+      page: true,
+      limit: 10,
+      limits: [10, 20]
+    })
+    // 搜索功能
+    form.on('submit(search)', function (data) {
+      tableIns.reload({
+        where: {   //重载的条件
+          search: data.field.search
+        }
+        , page: {
+          curr: 1 //重新从第 1 页开始
+        }
+      })
+    })
+  });
+</script>

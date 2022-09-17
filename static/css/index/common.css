@@ -1,0 +1,82 @@
+header {
+  height: 60px;
+  background-color: #fff;
+}
+header .container .logo {
+  float: left;
+  display: block;
+  width: 150px;
+  height: 50px;
+  margin-top: 5px;
+}
+header .container .logo img {
+  width: 100%;
+  transition: width 0.5s;
+}
+header .container .navlist {
+  float: right;
+}
+header .container .navlist li {
+  float: left;
+  padding: 0 15px;
+}
+header .container .navlist li:first-child {
+  padding-left: 0px;
+}
+header .container .navlist li:last-child {
+  padding-right: 0px;
+}
+header .container .navlist li a {
+  padding-left: 20px;
+  display: block;
+  color: #969696;
+  text-decoration: none;
+  line-height: 60px;
+  height: 60px;
+}
+header .container .navlist li a:hover span {
+  transform: rotate(180deg);
+  transition: transform 0.5s;
+}
+header .container .navlist li a span {
+  font-size: 12px;
+  padding-left: 8px;
+  color: #969696;
+  transition: transform 0.5s;
+  transform-origin: 65% 50%;
+}
+header .container .navbarbtn {
+  float: right;
+  line-height: 60px;
+  color: #969696;
+  font-size: 18px;
+}
+.banner {
+  margin: 0px;
+  padding: 0px;
+}
+@media (min-width: 480px) {
+  .banner img {
+    width: 606px;
+  }
+}
+@media (min-width: 768px) {
+  .banner img {
+    width: 750px;
+  }
+}
+@media (min-width: 992px) {
+  .banner img {
+    width: 970px;
+  }
+}
+@media (min-width: 1220px) {
+  .banner img {
+    width: 1210px;
+  }
+}
+@media (min-width: 1420px) {
+  .banner img {
+    width: 1902px;
+  }
+}

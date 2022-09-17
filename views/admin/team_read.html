@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/layui/css/layui.css">
+
+</head>
+
+<body>
+  <div class="layui-card">
+    <div class="layui-card-header">
+      <span class="layui-breadcrumb">
+        <a href="">首席团队管理</a>
+        <a><cite>查看单个团队</cite></a>
+      </span>
+    </div>
+    <div class="layui-card-body">
+      <form class="layui-form" action="" style="width: 800px;height: 754px;">
+        <!-- 团队名称： -->
+        <div class="layui-form-item">
+          <label class="layui-form-label">团队名称：</label>
+          <div class="layui-input-block">
+            <input type="text" name="team_name" value="<%= data.team_name %>" class="layui-input" disabled>
+          </div>
+        </div>
+        <!-- 团队缩略图 -->
+        <div class="layui-form-item">
+          <label class="layui-form-label">团队缩略图:</label>
+          <div class="layui-input-block">
+            <img width="300" src="<%= data.team_thumb %>" alt="">
+          </div>
+        </div>
+        <!-- 内容展示 -->
+        <div class="layui-form-item">
+          <label class="layui-form-label">内容展示：</label>
+          <div class="layui-input-block">
+            <textarea id="richText" name="team_content" style="display: none;"><%= data.team_content %></textarea>
+          </div>
+        </div>
+        <!-- 是否删除 -->
+        <div class="layui-form-item">
+          <label class="layui-form-label">是否删除：</label>
+          <div class="layui-input-block">
+            <% if(data.is_delete==1){ %>
+              <input type="checkbox" name="id_delete" lay-skin="switch" lay-text="未删除|已删除" checked disabled>
+              <% }else{ %>
+                <input type="checkbox" name="id_delete" lay-skin="switch" lay-text="未删除|已删除" disabled>
+                <% } %>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>
+
+<script src="/layui/layui.js"></script>
+<script>
+  layui.use("layedit", function () {
+    var layedit = layui.layedit;
+    layedit.build("richText");
+  })
+</script>

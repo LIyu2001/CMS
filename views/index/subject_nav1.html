@@ -1,0 +1,82 @@
+<%- include('common/header.html') %>
+  <!-- 引入所有专题样式 -->
+  <link rel="stylesheet" href="/css/index/subject.css">
+  <!-- 引入每周精华类样式 -->
+  <link rel="stylesheet" href="/css/index/subject_sub/subject_nav.css">
+
+  <!-- banner开始 -->
+  <section class="banner">
+    <img src="/img/subject_banner2.jpg" alt="">
+  </section>
+  <!-- banner结束 -->
+
+  <!-- 所有专题导航 -->
+  <nav>
+    <ul class="sub_navlist">
+      <% subCate.forEach(item=>{ %>
+        <li><a href="/subject?id=<%= item.nc_id %>">
+            <%= item.nc_name %>
+          </a></li>
+        <% }) %>
+    </ul>
+  </nav>
+
+  <!-- 部分新闻 -->
+  <main class="news_part">
+    <div class="center">
+      <div class="left">
+        <% subAbout.forEach(item=>{ %>
+          <div class="newsitem">
+            <img src="<%= item.news_thumb %>" alt="">
+            <div class="newsitem_body">
+              <span><a href="/subjectDetails?id=<%= item.news_id %>">
+                  <%= item.news_title %>
+                </a> </span>
+              <p class="details">
+                <%= item.news_desc %>
+              </p>
+              <p class="data">
+                <span>
+                  <%= item.news_ctime %>
+                </span>
+                <span class="glyphicon glyphicon-eye-open">
+                  <%= item.news_visit %>
+                </span>
+              </p>
+            </div>
+            <div class="line"></div>
+          </div>
+          <% }) %>
+
+      </div>
+      <div class="right">
+        <div class="sub_navlist2">
+          <ul>
+            <% subCate.forEach(item=>{ %>
+              <li><a href="/subject?id=<%= item.nc_id %>">
+                  <%= item.nc_name %>
+                </a></li>
+              <% }) %>
+          </ul>
+        </div>
+        <div class="recommend">
+          <h3>为你推荐</h3>
+          <ul>
+            <% news.forEach(item=>{ %>
+              <li><a href="/subjectAbout?id=<%= item.news_id %>">
+                  <%= item.news_title %>
+                </a></li>
+              <% }) %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 底部 -->
+  <%- include('common/footer.html') %>
+    </body>
+
+    </html>
+
+    <script src="/js/index/index.js"></script>

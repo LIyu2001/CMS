@@ -1,0 +1,208 @@
+<%- include("common/header.html")%>
+
+  <!-- 引入首页样式 -->
+  <link rel="stylesheet" href="/css/index/index.css">
+  <!-- banner开始 -->
+  <div class="swiper bannerSwiper">
+    <div class="swiper-wrapper">
+      <% banner.forEach(item=>{%>
+        <div class="swiper-slide">
+          <img src="<%=item.banner_img%>" alt="" title="<%=item.banner_name%>">
+        </div>
+        <%})%>
+    </div>
+    <!-- 如果需要分页器 -->
+    <!-- <div class="swiper-pagination"></div> -->
+
+    <!-- 如果需要导航按钮 -->
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+
+  </div>
+  <!-- banner结束 -->
+
+  <!-- 项目案例 -->
+  <section class="porject">
+    <div class="container">
+      <div class="head">
+        <h2 class="title">装饰案例</h2>
+        <p class="case">—— CASE——</p>
+        <p class="desc">**专业**受欢迎的建筑装饰案例，专注于打造美好的设计</p>
+      </div>
+
+      <div class="pclassify">
+        <!-- 三个项目的分类 -->
+        <ul>
+          <% procat.forEach(item=>{ %>
+            <li>
+              <a href="/project?id=<%=item.pc_id%>">
+                <%=item.pc_name%>
+              </a>
+            </li>
+            <%})%>
+        </ul>
+      </div>
+      <!-- 项目案例轮播图 -->
+      <div class="swiper projectSwaper porjectlist row">
+        <div class="swiper-wrapper">
+          <%project.forEach(item=>{ %>
+            <div class="swiper-slide">
+              <li class="">
+                <a href="/project?id = <%=item.pc_id%>">
+
+                  <img src="<%=item.project_thumb%>" alt="">
+                  <i class="search">
+                    <span class="glyphicon glyphicon-zoom-in"></span>
+                  </i>
+                  <h3>
+                    <a href="/project?id = <%=item.pc_id%>">
+                      <%=item.project_title%>
+                    </a>
+                  </h3>
+
+                </a>
+              </li>
+            </div>
+            <%}) %>
+
+        </div>
+        <div class="swiper-pagination"></div>
+      </div>
+
+    </div>
+
+    <div class="control container">
+      <div class="control-prev">
+        <i class="glyphicon glyphicon-chevron-left "></i>
+      </div>
+      <a href="/project?id=0">More</a>
+      <div class="control-next">
+        <i class="glyphicon glyphicon-chevron-right "></i>
+      </div>
+    </div>
+  </section>
+  <!-- 项目案例结束 -->
+
+
+  <!-- 关于我们开始 -->
+  <section class="about container">
+    <div class="pic col-sm-12 col-md-12 col-lg-4">
+      <img src="img/about-img.png" alt="">
+    </div>
+    <div class="right">
+      <div class="head">
+        <h2 class="title">
+          关于我们
+          <span>About Us</span>
+        </h2>
+      </div>
+      <div class="content">
+        我们整个团队是一支诚信负责、团结进取、高效务实开拓型的精英团队。在团队的努力下，2018年成长为建筑行业建筑工程结构设计事务所甲级企业。基于“用心、诚信”的经营原则，服务各类顾客的丰富经验，日益完善的经营和服务体系，玖鼎正合致力于成为西南一流的工程优化设计服务公司，为顾客提供优质的服务。基于“专业、合理”的设计原则，拥有一批专业素质极强的设计团队，在所设计的作品中都能取得最优的结构体系和工程设计经济指标。
+      </div>
+      <a href="/connect">More</a>
+    </div>
+  </section>
+  <!-- 关于我们结束 -->
+
+
+  <!-- 资讯中心开始 -->
+  <div class="news container">
+    <!-- 主题 -->
+    <div class="head">
+      <h2 class="title">资源中心</h2>
+      <p class="case">—— NEWS——</p>
+    </div>
+    <!-- 内容 -->
+    <div class="nc">
+      <!-- 内容 -->
+      <% newsList.forEach(item=>{ %>
+        <div class="block">
+          <div class="right">
+            <a href="/subjectDetails?id=<%= item.news_id %>">
+              <img src="<%= item.news_thumb %>" alt="" style="width: 160px; height: 110px;">
+            </a>
+          </div>
+          <div class="left">
+            <span>
+              <%= item.news_ctime %>
+            </span>
+            <a href="/subjectDetails?id=<%= item.news_id %>">
+              <%= item.news_title %>
+            </a>
+            <p>
+              <%= item.news_desc %>
+            </p>
+          </div>
+        </div>
+        <% }) %>
+    </div>
+    <div class="more">
+      <a href="/subject?id=0">More</a>
+    </div>
+  </div>
+  <!-- 资讯中心结束 -->
+
+  <!-- 友情链接开始 -->
+  <div class="link">
+    <div class="link_met container">
+      <ul>
+        <li>友情链接：</li>
+        <li>
+          <img src="/img/友情链接.png" alt="">
+        </li>
+        <li>
+          <img src="/img/友情链接.png" alt="">
+        </li>
+        <li>
+          <img src="/img/友情链接.png" alt="">
+        </li>
+        <li>
+          <img src="/img/友情链接.png" alt="">
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!-- 友情链接结束 -->
+
+
+  <%- include("common/footer.html")%>
+
+
+    <script>
+      var bannerSwiper = new Swiper('.bannerSwiper', {
+        speed: 700,
+        direction: 'horizontal', // 垂直切换选项
+        loop: true, // 循环模式选项
+        autoplay: true,//自动播放
+        grabCursor: true,//鼠标变小手
+
+        // 如果需要分页器
+        // pagination: {
+        //   el: '.swiper-pagination',
+        // },
+
+        // 如果需要前进后退按钮
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+
+        // 如果需要滚动条
+        // scrollbar: {
+        //   el: '.swiper-scrollbar',
+        // },
+      })
+
+
+      var projectSwaper = new Swiper(".projectSwaper", {
+        speed: 500,
+        autoplay: true,
+        slidesPerView: 3,
+        spaceBetween: 10,
+        navigation: {
+          nextEl: ".glyphicon-chevron-right",
+          prevEl: ".glyphicon-chevron-left",
+        },
+      });
+
+    </script>
