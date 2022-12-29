@@ -37,10 +37,8 @@ router.post("/insert", expressJoi(cate_schema), (req, res) => {
             code: 0,
             msg: "添加失败"
           })
-
         }
       })
-
     }
   })
 })
@@ -49,17 +47,17 @@ router.post("/insert", expressJoi(cate_schema), (req, res) => {
 
 //get请求获取表格数据
 router.get("/query", (req, res) => {
-  var { page, limit } = req.query
+  const { page, limit } = req.query
   //分页功能
   /**
    * page 1     0,1,2,3,4        0,5  (1-1)*5
    * page 2     5,6,7,8,9        5,5  (2-1)*5  
    * page 3     10,11,12,13,14   10,5  (3-1)*5
    */
-  var offset = (page - 1) * limit
+  let offset = (page - 1) * limit
 
   // console.log(req.query);
-  var counts
+  let counts;
   //获取数据总条数
   const sqlcount = `SELECT COUNT(*) AS counts FROM project_cate ;`
   db.query(sqlcount, (err, results) => {

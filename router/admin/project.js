@@ -67,15 +67,15 @@ router.get("/", (req, res) => {
 
 router.get("/query", (req, res) => {
   //进行判断，有值就取出，没值置空
-  var issearch = req.query.project_title ? req.query.project_title : ''
+  let issearch = req.query.project_title ? req.query.project_title : ''
   const { page, limit } = req.query
-  var count
+  let count;
   //设置分页
   /***
    * page:1  limit:5     0~4     (1-1)*5  5
-   * page:2  limit:5     5~9     (2-1)*5  5  
+   * page:2  limit:5     5~9     (2-1)*5  5
    */
-  var offset = (page - 1) * limit
+  let offset = (page - 1) * limit;
   //查询数据总条数
   const sqlcount = `SELECT COUNT(*) AS  count FROM project WHERE project_title LIKE  '%${issearch}%'`;
   db.query(sqlcount, (err, results) => {
@@ -89,7 +89,7 @@ router.get("/query", (req, res) => {
 
   db.query(sql, (err, results) => {
     if (err) return res.send({ code: 0, msg: err.message })
-    if (results.length != 0) {
+    if (results.length !== 0) {
       results.forEach((item) => {
         // console.log(item.ctime);
         item.ctime = item.ctime.toLocaleString();
@@ -117,7 +117,7 @@ router.get("/is_delete", (req, res) => {
   const sql = `UPDATE project SET is_delete = '${is_delete}' WHERE project_id = '${project_id}';`
   db.query(sql, (err, results) => {
     if (err) return res.send({ code: 0, msg: err.message })
-    if (results.affectedRows == 1) {
+    if (results.affectedRows === 1) {
       res.send({
         code: 1,
         msg: "修改成功"

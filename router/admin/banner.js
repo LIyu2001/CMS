@@ -73,8 +73,8 @@ router.post("/upload", upload.single("file"), (req, res) => {
 
 //表格数据渲染
 router.get("/query", (req, res) => {
-  var { banner_id } = req.query
-  var sql = ""
+  const {banner_id} = req.query;
+  let sql = "";
   if (banner_id) {
     //查询数据
     sql = `SELECT * FROM banner WHERE banner_id = '${banner_id}';`
@@ -98,7 +98,6 @@ router.get("/query", (req, res) => {
     sql = "SELECT * FROM banner ORDER BY banner_id DESC;"
     db.query(sql, (err, results) => {
       if (err) return res.send({ code: 0, msg: err.message })
-      // console.log(results);
       if (results.length != 0) {
         res.send({
           code: 0,
@@ -119,11 +118,11 @@ router.get("/query", (req, res) => {
 
 //图片排序的修改
 router.get("/update", (req, res) => {
-  var { banner_id, banner_sort } = req.query
+  const {banner_id, banner_sort} = req.query;
   const sql = `UPDATE banner SET banner_sort = '${banner_sort}' WHERE banner_id = '${banner_id}';`
   db.query(sql, (err, result) => {
     if (err) return err.msg
-    if (result.affectedRows == 1) {
+    if (result.affectedRows === 1) {
       return res.send({
         code: 1,
         msg: "修改成功"
@@ -145,7 +144,7 @@ router.post("/updateAll", (req, res) => {
     const sql = `UPDATE banner SET banner_name='${banner_name}',banner_img='${req.body.banner_img}' WHERE banner_id = ${banner_id};`
     db.query(sql, (err, result) => {
       if (err) return res.send({ code: 0, msg: err.message })
-      if (result.affectedRows == 1) {
+      if (result.affectedRows === 1) {
         //设置删除路径
         const url = path.join(__dirname + "../../../static", banner_delete)
         // console.log(url);
@@ -174,7 +173,7 @@ router.post("/updateAll", (req, res) => {
     const sql = `UPDATE banner SET banner_name='${banner_name}' WHERE banner_id = ${banner_id};`
     db.query(sql, (err, result) => {
       if (err) return res.send({ code: 0, msg: err.message })
-      if (result.affectedRows == 1) {
+      if (result.affectedRows === 1) {
         res.send({
           code: 1,
           msg: "修改成功"
@@ -201,7 +200,7 @@ router.get("/delete", (req, res) => {
   db.query(sql, (err, result) => {
 
     if (err) res.send({ code: 0, msg: err.message })
-    if (result.affectedRows == 1) {
+    if (result.affectedRows === 1) {
       const url = path.join(__dirname, "../../static", img)
       //成功，图片删除
       fs.unlink(url, (error) => {
@@ -242,7 +241,7 @@ module.exports = router
  *
  * 思路查询数据库中对应图片的存储数据
  * 1. banner_img 从客户端携带 id,img
- * 2. 只穿id查询数据库，找到banner_img的值
+ * 2. 只传id查询数据库，找到banner_img的值
  */
 
 

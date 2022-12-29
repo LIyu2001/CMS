@@ -95,7 +95,7 @@ router.post("/insert", expressJoi(nav_schema), (req, res) => {
         if (err) {
           return res.send(err)
         }
-        if (results.affectedRows != 1) {
+        if (results.affectedRows !== 1) {
           return res.send({
             code: 0,
             msg: "导航添加失败"

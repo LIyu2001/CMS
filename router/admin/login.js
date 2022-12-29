@@ -37,7 +37,7 @@ router.post("/a", exportsJoi(login_schema), (req, res) => {
       })
     }
     //2. 检查用户是否存在，使用results.length的长度来进行判断
-    if (results.length != 1) {
+    if (results.length !== 1) {
       res.send({
         code: 1,
         msg: "用户名不存在，先注册再登陆"
@@ -76,7 +76,7 @@ router.post("/", exportsJoi(login_schema), (req, res) => {
       })
     }
     //2. 用户名检查
-    if (results.length != 1) {
+    if (results.length !== 1) {
 
       return res.send({
         code: 0,
