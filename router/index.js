@@ -9,7 +9,7 @@ router.use((req, res, next) => {
   const sqlNav = "select * from nav where nav_is_show = 1 order by nav_sort asc"
   db.query(sqlNav, (err, results) => {
     if (err) return res.send({ code: 0, msg: err.message })
-    if (results.length != 0) {
+    if (results.length !== 0) {
       nav = results
     }
   })
@@ -17,7 +17,7 @@ router.use((req, res, next) => {
   const sqlBan = 'SELECT banner_name ,banner_img from  banner order by banner_id asc'
   db.query(sqlBan, (err, results) => {
     if (err) return res.send({ code: 0, msg: err.message })
-    if (results.length != 0) {
+    if (results.length !== 0) {
       banner = results
     }
   })
@@ -26,7 +26,7 @@ router.use((req, res, next) => {
   const sqlpcate = "SELECT * FROM project_cate WHERE is_delete=1"
   db.query(sqlpcate, (err, results) => {
     if (err) return res.send({ code: 0, msg: err.message })
-    if (results.length != 0) {
+    if (results.length !== 0) {
       pcate = results
     }
   })
@@ -34,7 +34,7 @@ router.use((req, res, next) => {
   const sqlscate = "SELECT * FROM news_cate WHERE nc_is_delete = 0"
   db.query(sqlscate, (err, results) => {
     if (err) return res.send({ code: 0, msg: err.message })
-    if (results.length != 0) {
+    if (results.length !== 0) {
       scate = results
     }
   })
@@ -42,7 +42,7 @@ router.use((req, res, next) => {
   const sql = `select news_id,news_title,news_thumb,news_desc,news_ctime from news where news_is_delete=0 order by news_id asc limit 0,8`
   db.query(sql, (err, results) => {
     if (err) return res.send({ code: 0, msg: err.message })
-    if (results.length != 0) {
+    if (results.length !== 0) {
       let item
       for (item of results) {
         item.news_ctime = item.news_ctime.getFullYear() + '-' + item.news_ctime.getMonth() + '-' + item.news_ctime.getDate()
@@ -54,7 +54,7 @@ router.use((req, res, next) => {
   const sqlteam = "SELECT * FROM team WHERE is_delete=1"
   db.query(sqlteam, (err, results) => {
     if (err) return res.send({ code: 0, msg: err.message })
-    if (results.length != 0) {
+    if (results.length !== 0) {
       tmber = results
     }
   })
@@ -63,7 +63,7 @@ router.use((req, res, next) => {
   const sqlProat = 'SELECT project_cate.pc_name,pc_id FROM project_cate ORDER BY project_cate.pc_id DESC LIMIT 0,3'
   db.query(sqlProat, (err, results) => {
     if (err) return res.send({ code: 0, msg: err.message })
-    if (results.length != 0) {
+    if (results.length !== 0) {
       procat = results
     }
   })
@@ -72,7 +72,7 @@ router.use((req, res, next) => {
   const sqlTene = 'SELECT  * FROM team ORDER BY team.id ASC LIMIT 0,6'
   db.query(sqlTene, (err, results) => {
     if (err) return res.send({ code: 0, msg: err.msg })
-    if (results.length != 0) {
+    if (results.length !== 0) {
       tenam = results
     }
   })
@@ -98,7 +98,7 @@ router.get("/", (req, res) => {
   const sqlProjet = 'SELECT project.project_title, project.project_thumb, project.pc_id FROM project WHERE is_delete = 1 ORDER BY project_id ASC LIMIT 0 ,12'
   db.query(sqlProjet, (err, results) => {
     if (err) return res.send({ code: 0, msg: err.message })
-    if (results.length != 0) {
+    if (results.length !== 0) {
       project = results
     }
   })
@@ -107,7 +107,7 @@ router.get("/", (req, res) => {
   const sql = `select news_id,news_title,news_thumb,news_desc,news_ctime from news where news_is_delete=0 order by news_id asc limit 0,8`
   db.query(sql, (err, results) => {
     if (err) return res.send({ code: 0, msg: err.message })
-    if (results.length != 0) {
+    if (results.length !== 0) {
       news = results
     }
   })
@@ -126,7 +126,7 @@ router.get("/project", (req, res) => {
   var sqlTotal = 0
   //计算分页
   var offset = (page - 1) * limit
-  if (pc_id != 0) {
+  if (pc_id !== 0) {
 
     sql = `SELECT  project.project_id ,project.project_title, project.project_thumb  FROM project WHERE is_delete = 1 AND pc_id = ${pc_id} ORDER BY project_id ASC LIMIT ${offset} ,${limit}`
     sqlTotal = `SELECT COUNT(*) AS count  FROM project WHERE is_delete = 1 AND pc_id = ${pc_id} `
@@ -137,7 +137,7 @@ router.get("/project", (req, res) => {
   //查询总数
   db.query(sqlTotal, (err, results) => {
     if (err) return res.send({ code: 0, msg: err.message })
-    if (results.length != 0) {
+    if (results.length !== 0) {
       totalPage = Math.ceil(results[0].count / limit)
     }
   })
@@ -146,7 +146,7 @@ router.get("/project", (req, res) => {
   db.query(sql, (err, results) => {
     // console.log(results);
     if (err) return res.send({ code: 0, msg: err.message })
-    if (results.length != 0) {
+    if (results.length !== 0) {
       project = results
     }
   })
@@ -164,7 +164,7 @@ router.use((req, res, next) => {
   const sqlSubCate = `select * from news_cate where nc_is_delete=0 `
   db.query(sqlSubCate, (err, results) => {
     if (err) return res.send({ code: 0, msg: err.message })
-    if (results.length != 0) {
+    if (results.length !== 0) {
       subCate = results
     }
   })
@@ -182,7 +182,7 @@ router.get('/subject', (req, res) => {
   var offset = (page - 1) * limit
 
   // 分页
-  if (id == 0) {
+  if (id === 0) {
     sql = `select news_id,news_title,news_thumb,news_desc from news where news_is_delete=0 limit ${offset},${limit}`
     sqlTotal = `select count(*) from news where news_is_delete=0`
   } else {
@@ -193,14 +193,14 @@ router.get('/subject', (req, res) => {
   // 查询总数
   db.query(sqlTotal, (err, results) => {
     if (err) return res.send({ code: 0, msg: err.message })
-    if (results.length != 0) {
+    if (results.length !== 0) {
       totalPage = Math.ceil(results[0]['count(*)'] / limit)
     }
   })
   // 查询专题
   db.query(sql, (err, results) => {
     if (err) return res.send({ code: 0, msg: err.message })
-    if (results.length != 0) {
+    if (results.length !== 0) {
       news = results
     }
   })
@@ -217,7 +217,7 @@ router.get('/subjectAbout', (req, res) => {
   const sql = `select * from news where news_id=${id}`
   db.query(sql, (err, results) => {
     if (err) return res.send({ code: 0, msg: err.message })
-    if (results.length != 0) {
+    if (results.length !== 0) {
       results[0].news_ctime = results[0].news_ctime.getFullYear() + '-' + results[0].news_ctime.getMonth() + '-' + results[0].news_ctime.getDate()
       // 浏览量
       const sqlnum = `update news set news_visit=${results[0].news_visit + 1} where news_id=${id}`
@@ -238,7 +238,7 @@ router.get('/subjectDetails', (req, res) => {
   const sql = `select * from news where news_id=${id}`
   db.query(sql, (err, results) => {
     if (err) return res.send({ code: 0, msg: err.message })
-    if (results.length != 0) {
+    if (results.length !== 0) {
       results[0].news_ctime = results[0].news_ctime.toLocaleString()
       subDetails = results
     }
@@ -247,13 +247,13 @@ router.get('/subjectDetails', (req, res) => {
   const sqlPrev = `select news_id,news_title from news where news_id<${id} and news_is_delete=0 order by news_id desc limit 1`
   db.query(sqlPrev, (err, results) => {
     if (err) return res.send({ code: 0, msg: err.message })
-    prev = results.length == 0 ? '没有了' : results[0]
+    prev = results.length === 0 ? '没有了' : results[0]
   })
   // 下一篇
   const sqlNext = `select news_id,news_title from news where news_id>${id} and news_is_delete=0 order by news_id asc limit 1`
   db.query(sqlNext, (err, results) => {
     if (err) return res.send({ code: 0, msg: err.message })
-    next = results.length == 0 ? '没有了' : results[0]
+    next = results.length === 0 ? '没有了' : results[0]
   })
   setTimeout(function () {
     res.render('index/subject_item1', { subDetails, prev, next })
@@ -280,7 +280,7 @@ router.get("/detail", (req, res) => {
       // console.log(sqlnum);
       db.query(sqlnum, (err, results) => {
         if (err) return res.send({ code: 0, msg: err.msg })
-        if (results.affectedRows == 1) {
+        if (results.affectedRows === 1) {
 
         } else {
 
@@ -296,14 +296,14 @@ router.get("/detail", (req, res) => {
   const sqlPrev = `SELECT * FROM project WHERE  project.is_delete=1 AND project_id < ${req.query.id} ORDER BY project_id DESC LIMIT 0,1`
   db.query(sqlPrev, (err, results) => {
     if (err) return res.send({ code: 0, msg: err.msg })
-    prev = results.length == 0 ? "没有了" : results[0]
+    prev = results.length === 0 ? "没有了" : results[0]
   })
 
   //下一篇
   const sqlNext = `SELECT * FROM project WHERE  project.is_delete=1 AND project_id > ${req.query.id} ORDER BY project_id ASC LIMIT 0,1`
   db.query(sqlNext, (err, results) => {
     if (err) return res.send({ code: 0, msg: err.msg })
-    next = results.length == 0 ? "没有了" : results[0]
+    next = results.length === 0 ? "没有了" : results[0]
   })
 
 
@@ -321,7 +321,7 @@ router.get('/about', (req, res) => {
   let teamifo
   const id = req.query.id ? req.query.id : ""
   let sqlteam = ''
-  if (id != 0) {
+  if (id !== 0) {
     //查询某个人的信息
     sqlteam = `SELECT  * FROM team WHERE id = ${id}`
   } else {
@@ -331,7 +331,7 @@ router.get('/about', (req, res) => {
 
   db.query(sqlteam, (err, results) => {
     if (err) return res.send({ code: 0, msg: err.msg })
-    if (results.length != 0) {
+    if (results.length !== 0) {
       teamifo = results
     }
   })
@@ -348,7 +348,7 @@ router.get("/teamDet", (req, res) => {
   const sql = `SELECT * FROM team WHERE id= ${req.query.id}`
   db.query(sql, (err, result) => {
     if (err) return res.send({ code: 0, msg: err.msg })
-    if (result.length != 0) {
+    if (result.length !== 0) {
       team = result[0]
       // console.log(team);
     }
