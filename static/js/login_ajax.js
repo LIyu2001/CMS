@@ -1,6 +1,6 @@
 window.onload = function () {
   layui.use(["form", "jquery", "layer"], function () {
-    var form = layui.form, $ = layui.$, layer = layui.layer;
+    let form = layui.form, $ = layui.$, layer = layui.layer;
 
 
     //表单验证
@@ -40,7 +40,7 @@ window.onload = function () {
         data: data.field,
         success: function (res) {
           //code码为1 成功 跳转index
-          if (res.code == 1) {
+          if (res.code === 1) {
             location.href = "/admin/index"
           } else {
             layer.open({
@@ -51,7 +51,6 @@ window.onload = function () {
           }
           console.log(res);
           //code码为0 提示
-
         }
       })
       return false;

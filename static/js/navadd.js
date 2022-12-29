@@ -19,14 +19,14 @@ window.onload = function () {
           //   content: res //注意，如果str是object，那么需要字符拼接。
           // });
           var { code, msg } = res
-          if (code == 1) {
+          if (code === 1) {
             layer.open({
               title: '提示',
               content: msg,
               icon: 1
             });
           }
-          if (code == 0) {
+          if (code === 0) {
             layer.open({
               title: '提示',
               content: msg,
@@ -34,9 +34,6 @@ window.onload = function () {
             });
 
           }
-
-
-
           console.log(res)
         }
       })

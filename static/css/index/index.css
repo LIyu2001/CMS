@@ -239,8 +239,8 @@
   display: flex;
   flex-wrap: wrap;
   padding-top: 50px;
-  padding-left: 0px;
-  padding-right: 0px;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .news .nc .block {
